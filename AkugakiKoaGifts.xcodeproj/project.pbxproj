@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		7F5846DB2FF8C4ED00BF9F6E /* AudioPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 7F5846DA2FF8C4ED00BF9F6E /* AudioPlayer */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		7F9338622FF89B9900809E0F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F5846DB2FF8C4ED00BF9F6E /* AudioPlayer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,12 +77,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7F5846D92FF8C4ED00BF9F6E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		7F93384B2FF89B9800809E0F = {
 			isa = PBXGroup;
 			children = (
 				7F9338562FF89B9800809E0F /* AkugakiKoaGifts */,
 				7F9338642FF89B9900809E0F /* AkugakiKoaGiftsTests */,
 				7F93386E2FF89B9900809E0F /* AkugakiKoaGiftsUITests */,
+				7F5846D92FF8C4ED00BF9F6E /* Frameworks */,
 				7F9338552FF89B9800809E0F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -106,12 +119,14 @@
 			buildRules = (
 			);
 			dependencies = (
+				7F5846D82FF8C4D800BF9F6E /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				7F9338562FF89B9800809E0F /* AkugakiKoaGifts */,
 			);
 			name = AkugakiKoaGifts;
 			packageProductDependencies = (
+				7F5846DA2FF8C4ED00BF9F6E /* AudioPlayer */,
 			);
 			productName = AkugakiKoaGifts;
 			productReference = 7F9338542FF89B9800809E0F /* AkugakiKoaGifts.app */;
@@ -195,6 +210,9 @@
 			);
 			mainGroup = 7F93384B2FF89B9800809E0F;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7F5846D62FF8C4C300BF9F6E /* XCLocalSwiftPackageReference "../AudioPlayer" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7F9338552FF89B9800809E0F /* Products */;
 			projectDirPath = "";
@@ -256,6 +274,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		7F5846D82FF8C4D800BF9F6E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 7F5846D72FF8C4D800BF9F6E /* AudioPlayer */;
+		};
 		7F9338632FF89B9900809E0F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 7F9338532FF89B9800809E0F /* AkugakiKoaGifts */;
@@ -405,6 +427,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -437,6 +460,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -578,6 +602,26 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		7F5846D62FF8C4C300BF9F6E /* XCLocalSwiftPackageReference "../AudioPlayer" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../AudioPlayer;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7F5846D72FF8C4D800BF9F6E /* AudioPlayer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7F5846D62FF8C4C300BF9F6E /* XCLocalSwiftPackageReference "../AudioPlayer" */;
+			productName = AudioPlayer;
+		};
+		7F5846DA2FF8C4ED00BF9F6E /* AudioPlayer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7F5846D62FF8C4C300BF9F6E /* XCLocalSwiftPackageReference "../AudioPlayer" */;
+			productName = AudioPlayer;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7F93384C2FF89B9800809E0F /* Project object */;
 }
