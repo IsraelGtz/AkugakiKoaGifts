@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7F5846DB2FF8C4ED00BF9F6E /* AudioPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 7F5846DA2FF8C4ED00BF9F6E /* AudioPlayer */; };
+		7FA9A5313001D16300DCA780 /* KoaneKoanikisLettersStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 7FA9A5303001D16300DCA780 /* KoaneKoanikisLettersStorage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7FA9A5313001D16300DCA780 /* KoaneKoanikisLettersStorage in Frameworks */,
 				7F5846DB2FF8C4ED00BF9F6E /* AudioPlayer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -119,6 +121,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				7FA9A52F3001D15700DCA780 /* PBXTargetDependency */,
 				7F5846D82FF8C4D800BF9F6E /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
@@ -127,6 +130,7 @@
 			name = AkugakiKoaGifts;
 			packageProductDependencies = (
 				7F5846DA2FF8C4ED00BF9F6E /* AudioPlayer */,
+				7FA9A5303001D16300DCA780 /* KoaneKoanikisLettersStorage */,
 			);
 			productName = AkugakiKoaGifts;
 			productReference = 7F9338542FF89B9800809E0F /* AkugakiKoaGifts.app */;
@@ -212,6 +216,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				7F5846D62FF8C4C300BF9F6E /* XCLocalSwiftPackageReference "../AudioPlayer" */,
+				7FA9A52D3001D14900DCA780 /* XCLocalSwiftPackageReference "../KoaneKoanikisLettersStorage" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7F9338552FF89B9800809E0F /* Products */;
@@ -287,6 +292,10 @@
 			isa = PBXTargetDependency;
 			target = 7F9338532FF89B9800809E0F /* AkugakiKoaGifts */;
 			targetProxy = 7F93386C2FF89B9900809E0F /* PBXContainerItemProxy */;
+		};
+		7FA9A52F3001D15700DCA780 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 7FA9A52E3001D15700DCA780 /* KoaneKoanikisLettersStorage */;
 		};
 /* End PBXTargetDependency section */
 
@@ -608,6 +617,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../AudioPlayer;
 		};
+		7FA9A52D3001D14900DCA780 /* XCLocalSwiftPackageReference "../KoaneKoanikisLettersStorage" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../KoaneKoanikisLettersStorage;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -620,6 +633,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7F5846D62FF8C4C300BF9F6E /* XCLocalSwiftPackageReference "../AudioPlayer" */;
 			productName = AudioPlayer;
+		};
+		7FA9A52E3001D15700DCA780 /* KoaneKoanikisLettersStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7FA9A52D3001D14900DCA780 /* XCLocalSwiftPackageReference "../KoaneKoanikisLettersStorage" */;
+			productName = KoaneKoanikisLettersStorage;
+		};
+		7FA9A5303001D16300DCA780 /* KoaneKoanikisLettersStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7FA9A52D3001D14900DCA780 /* XCLocalSwiftPackageReference "../KoaneKoanikisLettersStorage" */;
+			productName = KoaneKoanikisLettersStorage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
