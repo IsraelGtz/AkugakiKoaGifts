@@ -8,13 +8,6 @@
 import AudioPlayer
 import SwiftUI
 
-struct ScrollOffsetPreferenceKey: PreferenceKey {
-    static var defaultValue: CGRect = .zero
-    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
-        value = nextValue()
-    }
-}
-
 struct ScrollToImageAnimationView: View {
     @State private var imageRect: CGRect = .zero
     @State private var scrollViewHeight: CGFloat = 0
@@ -42,17 +35,14 @@ struct ScrollToImageAnimationView: View {
     // Calculates color transition progress from 0.0 to 1.0
     var transitionProgress: CGFloat {
         guard
-            scrollViewHeight > 0
+            scrollViewHeight > 0,
+            imageName != nil
         else {
             return 0
         }
 
         // Distance remaining until the image is fully scrolled into view
         let distanceRemaining = imageRect.minY - scrollViewHeight
-
-        // Define how long the color transition takes (e.g., finishes when image is 200px on screen)
-//        let animationDuration: CGFloat = 200.0
-
         if distanceRemaining > 0 {
             return 0 // Image is still below the screen fold
         } else {
@@ -74,13 +64,11 @@ struct ScrollToImageAnimationView: View {
             GeometryReader { containerGeo in
                 ScrollView {
                     VStack(spacing: 20) {
-                        // Long text content pushing the image down
                         Text(text)
-                            .font(.system(size: 19, weight: .regular, design: .rounded))
+                            .font(.system(.title3, design: .rounded, weight: .regular))
                             .foregroundStyle(Color.letterFontColor)
                             .padding()
 
-                        // The Target Image at the bottom
                         if let name = imageName {
                             Image(name)
                                 .resizable()

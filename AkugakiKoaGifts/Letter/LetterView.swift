@@ -28,29 +28,12 @@ struct LetterView: View {
             backgroundColor: .letterBackgroundColor,
             fadeBackgroundColor: .letterFadeBackgroundColor
         )
-
-//        ScrollView {
-//            VStack(alignment: .leading, spacing: 12) {
-//                Text(viewModel.body)
-//                    .font(.headline)
-//                    .lineLimit(nil)
-//                    .multilineTextAlignment(.leading)
-//                viewModel.image
-//                    .onScrollVisibilityChange(threshold: 0.7) { visible in
-//                        withAnimation(.linear(duration: 0.3)) {
-//                            isHalfwayVisible = visible
-//                        }
-//                    }
-//            }
-//            .padding()
-//        }
         .safeAreaInset(edge: .bottom) {
             AudioPlayerView(
                 audioFileName: "test",
                 audioFileExtension: "caf"
             )
         }
-        .background(backgroundColor)
         .navigationTitle(viewModel.title)
         .navigationBarTitleDisplayMode(.large)
     }
