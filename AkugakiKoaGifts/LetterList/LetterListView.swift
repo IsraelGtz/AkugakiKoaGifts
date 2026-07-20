@@ -10,28 +10,26 @@ import SwiftUI
 
 struct LetterListView: View {
     private let viewModel = LetterListViewModel()
+    @State private var selectedLetter: Letter? = nil
 
     var body: some View {
         NavigationStack {
             List {
                 ForEach(viewModel.letters) { letter in
-                    NavigationLink {
-                        LetterView(letter: letter)
-                    } label: {
-                        cell(of: letter)
-                    }
+                    LetterCellView(
+                        selectedLetter: $selectedLetter,
+                        letter: letter
+                    )
                 }
             }
+            .navigationDestination(item: $selectedLetter, destination: { letter in
+                LetterView(letter: letter)
+            })
+            .listStyle(.plain)
+            .listRowSpacing(0)
             .onAppear {
                 viewModel.fetchLetters()
             }
-        }
-    }
-
-    @ViewBuilder
-    private func cell(of letter: Letter) -> some View {
-        VStack {
-            Text(letter.name)
         }
     }
 }
