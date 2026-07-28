@@ -41,6 +41,8 @@ struct LetterListView: View {
         .listStyle(.plain)
         .listRowSpacing(12)
         .background()
+        .navigationTitle("Letters/Cartas")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     @ViewBuilder

@@ -111,6 +111,19 @@ struct LetterCellView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 72, height: 72)
+                .clipShape(Circle())
+                .overlay(
+                    Circle().fill(
+                        RadialGradient(
+                            gradient: Gradient(colors: [.clear, .black]),
+                            center: .center,
+                            startRadius: 25,
+                            endRadius: 40
+                        )
+                    )
+                    .blendMode(.destinationOut)
+                )
+                .compositingGroup()
                 .position(position.getCGPoint(with: size))
         }
     }
