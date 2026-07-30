@@ -11,6 +11,7 @@ import SwiftUI
 struct LetterListView: View {
     @State private var viewModel = LetterListViewModel()
     @State private var selectedLetter: Letter? = nil
+    @Namespace private var zoomNamespace
 
     var body: some View {
         NavigationStack {
@@ -33,10 +34,12 @@ struct LetterListView: View {
                     selectedLetter: $selectedLetter,
                     letter: letter
                 )
+                .matchedTransitionSource(id: letter.id, in: zoomNamespace)
             }
         }
-        .navigationDestination(item: $selectedLetter, destination: { letter in
+        .fullScreenCover(item: $selectedLetter, content: { letter in
             LetterView(letter: letter)
+                .navigationTransition(.zoom(sourceID: letter.id, in: zoomNamespace))
         })
         .listStyle(.plain)
         .listRowSpacing(12)

@@ -34,19 +34,14 @@ struct LetterCellView: View {
     @Binding var selectedLetter: Letter?
     let letter: Letter
 
-    @State private var firstImageName: String?
-    @State private var secondImageName: String?
+    @State private var imageName: String = "koaPigtails"
 
-    private let images = [
+    private let randomImageName: String? = [
         "koaPigtails",
         "koaStrawberry",
         "koaNya",
         "koaCute",
-    ]
-
-    private var randomImageName: String? {
-        return images.randomElement()
-    }
+    ].randomElement()
 
     init(
         selectedLetter: Binding<Letter?>,
@@ -54,8 +49,9 @@ struct LetterCellView: View {
     ) {
         _selectedLetter = selectedLetter
         self.letter = letter
-        _firstImageName = State(initialValue: images.randomElement())
-        _secondImageName = State(initialValue: images.randomElement())
+        if let randomImageName {
+            _imageName = State(initialValue: randomImageName)
+        }
     }
 
     var body: some View {
@@ -71,61 +67,38 @@ struct LetterCellView: View {
 
     @ViewBuilder
     private var cellBody: some View {
-        ZStack {
-            ZStack {
-                getImage(with: firstImageName, position: .topLeft)
-                Text(letter.name)
-                    .font(.system(.largeTitle, design: .serif, weight: .semibold))
-                    .foregroundStyle(Color.koaCyan)
-                getImage(with: secondImageName, position: .bottomRight)
-            }
-            .padding()
-            .background(
-                WaveBackground()
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            )
-            .frame(minHeight: 72)
+        HStack(alignment: .center) {
+            Text(letter.name)
+                .font(.system(.largeTitle, design: .serif, weight: .semibold))
+                .foregroundStyle(Color.koaCyan)
+                .minimumScaleFactor(0.8)
+                .padding()
+            Spacer()
+            backgroundImage
         }
+        .frame(height: 120)
+        .clipped()
         .background(
-            GeometryReader { elementGeo in
-                Color.clear
-                    .preference(
-                        key: ScrollOffsetPreferenceKey.self,
-                        value: elementGeo.frame(in: .named("scrollContainer"))
-                    )
-                    .task(id: elementGeo.size) {
-                        size = elementGeo.size
-                    }
-            }
+            Color.sliderTrack
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         )
-        .frame(minHeight: 72)
     }
 
     @ViewBuilder
-    private func getImage(
-        with name: String?,
-        position: ImagePosition
-    ) -> some View {
-        if let name {
-            Image(name)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 72, height: 72)
-                .clipShape(Circle())
-                .overlay(
-                    Circle().fill(
-                        RadialGradient(
-                            gradient: Gradient(colors: [.clear, .black]),
-                            center: .center,
-                            startRadius: 25,
-                            endRadius: 40
-                        )
-                    )
-                    .blendMode(.destinationOut)
+    private var backgroundImage: some View {
+        Image(imageName)
+            .resizable()
+            .scaledToFit()
+            .frame(minWidth: 180, maxWidth: 200, minHeight: 180, maxHeight: 200)
+            .clipShape(Circle())
+            .mask(
+                RadialGradient(
+                    gradient: Gradient(colors: [.black, .black, .clear]),
+                    center: .center,
+                    startRadius: 0,
+                    endRadius: 100
                 )
-                .compositingGroup()
-                .position(position.getCGPoint(with: size))
-        }
+            )
     }
 }
 

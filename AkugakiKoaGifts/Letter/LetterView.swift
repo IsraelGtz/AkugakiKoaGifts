@@ -22,19 +22,21 @@ struct LetterView: View {
     }
 
     var body: some View {
-        ScrollToImageAnimationView(
-            text: viewModel.body,
-            imageName: viewModel.imageName,
-            backgroundColor: .letterBackgroundColor,
-            fadeBackgroundColor: .letterFadeBackgroundColor
-        )
-        .safeAreaInset(edge: .bottom) {
-            AudioPlayerView(
-                audioFileName: "test",
-                audioFileExtension: "caf"
+        NavigationStack {
+            ScrollToImageAnimationView(
+                text: viewModel.body,
+                imageName: viewModel.imageName,
+                backgroundColor: .letterBackgroundColor,
+                fadeBackgroundColor: .letterFadeBackgroundColor
             )
+            .safeAreaInset(edge: .bottom) {
+                AudioPlayerView(
+                    audioFileName: "test",
+                    audioFileExtension: "caf"
+                )
+            }
+            .navigationTitle(viewModel.title)
+            .navigationBarTitleDisplayMode(.large)
         }
-        .navigationTitle(viewModel.title)
-        .navigationBarTitleDisplayMode(.large)
     }
 }
