@@ -9,39 +9,10 @@ import AudioPlayer
 import KoaneKoanikisLettersStorage
 import SwiftUI
 
-private enum ImagePosition {
-    case topLeft
-    case topRight
-    case bottomLeft
-    case bottomRight
-
-    func getCGPoint(with size: CGSize) -> CGPoint {
-        switch self {
-        case .topLeft:
-            .init(x: 0, y: 0)
-        case .topRight:
-            .init(x: size.width - 72, y: 0)
-        case .bottomLeft:
-            .init(x: 0, y: size.height - 72)
-        case .bottomRight:
-            .init(x: size.width - 36, y: size.height - 36)
-        }
-    }
-}
-
 struct LetterCellView: View {
     @State private var size: CGSize = .zero
     @Binding var selectedLetter: Letter?
     let letter: Letter
-
-    @State private var imageName: String = "koaPigtails"
-
-    private let randomImageName: String? = [
-        "koaPigtails",
-        "koaStrawberry",
-        "koaNya",
-        "koaCute",
-    ].randomElement()
 
     init(
         selectedLetter: Binding<Letter?>,
@@ -49,9 +20,6 @@ struct LetterCellView: View {
     ) {
         _selectedLetter = selectedLetter
         self.letter = letter
-        if let randomImageName {
-            _imageName = State(initialValue: randomImageName)
-        }
     }
 
     var body: some View {
@@ -69,10 +37,7 @@ struct LetterCellView: View {
     private var cellBody: some View {
         HStack(alignment: .center) {
             Text(letter.name)
-                .font(.system(.largeTitle, design: .serif, weight: .semibold))
-                .foregroundStyle(Color.koaCyan)
-                .minimumScaleFactor(0.8)
-                .padding()
+                .titleCellStyle()
             Spacer()
             backgroundImage
         }
@@ -86,19 +51,10 @@ struct LetterCellView: View {
 
     @ViewBuilder
     private var backgroundImage: some View {
-        Image(imageName)
-            .resizable()
-            .scaledToFit()
-            .frame(minWidth: 180, maxWidth: 200, minHeight: 180, maxHeight: 200)
-            .clipShape(Circle())
-            .mask(
-                RadialGradient(
-                    gradient: Gradient(colors: [.black, .black, .clear]),
-                    center: .center,
-                    startRadius: 0,
-                    endRadius: 100
-                )
-            )
+        ImageBuilder.getRandomImage(
+            minSize: .init(width: 180, height: 180),
+            maxSize: .init(width: 200, height: 200)
+        )
     }
 }
 
