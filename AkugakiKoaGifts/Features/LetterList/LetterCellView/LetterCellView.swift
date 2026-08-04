@@ -44,8 +44,8 @@ struct LetterCellView: View {
         .frame(height: 120)
         .clipped()
         .background(
-            Color.sliderTrack
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            Color.sliderTrack.gradient,
+            in: RoundedRectangle(cornerRadius: 20)
         )
     }
 

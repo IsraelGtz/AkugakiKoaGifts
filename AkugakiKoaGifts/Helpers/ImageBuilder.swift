@@ -7,16 +7,47 @@
 
 import SwiftUI
 
+struct IdentifiableImageResource: Identifiable {
+    let id = UUID()
+    let resource: ImageResource
+
+    init(_ resource: ImageResource) {
+        self.resource = resource
+    }
+}
+
 enum ImageBuilder {
-    private static let imageNames: [String] = [
-        "koaPigtails",
-        "koaStrawberry",
-        "koaNya",
-        "koaCute",
+    static let imageResources: [IdentifiableImageResource] = [
+        .init(.koaCute),
+        .init(.koaNya),
+        .init(.koaPigtails),
+        .init(.koaStrawberry),
+        .init(.test),
     ]
 
-    private static var randomImageName: String {
-        imageNames.randomElement() ?? "koaPigtails"
+    static var randomIdentifiableImage: IdentifiableImageResource {
+        imageResources.randomElement() ?? .init(.koaPigtails)
+    }
+
+    static func getAllImages(
+        idealSize: CGSize? = nil,
+        minSize: CGSize? = nil,
+        maxSize: CGSize? = nil,
+        applyGradient: Bool = true,
+        gradientStartRadius: CGFloat = 0,
+        gradientEndRadius: CGFloat = 100
+    ) -> [some View] {
+        imageResources.compactMap { image in
+            Image(image.resource)
+                .genericStyle(
+                    idealSize: idealSize,
+                    minSize: minSize,
+                    maxSize: maxSize,
+                    applyGradient: applyGradient,
+                    gradientStartRadius: gradientStartRadius,
+                    gradientEndRadius: gradientEndRadius
+                )
+        }
     }
 
     @ViewBuilder
@@ -28,27 +59,14 @@ enum ImageBuilder {
         gradientStartRadius: CGFloat = 0,
         gradientEndRadius: CGFloat = 100
     ) -> some View {
-        Image(randomImageName)
-            .resizable()
-            .scaledToFit()
-            .frame(
-                minWidth: minSize?.width,
-                idealWidth: idealSize?.width,
-                maxWidth: maxSize?.width,
-                minHeight: minSize?.height,
-                maxHeight: maxSize?.height
+        Image(randomIdentifiableImage.resource)
+            .genericStyle(
+                idealSize: idealSize,
+                minSize: minSize,
+                maxSize: maxSize,
+                applyGradient: applyGradient,
+                gradientStartRadius: gradientStartRadius,
+                gradientEndRadius: gradientEndRadius
             )
-            .if(applyGradient, transform: { view in
-                view
-                    .clipShape(Circle())
-                    .mask {
-                        RadialGradient(
-                            gradient: Gradient(colors: [.black, .black, .clear]),
-                            center: .center,
-                            startRadius: gradientStartRadius,
-                            endRadius: gradientEndRadius
-                        )
-                    }
-            })
     }
 }
