@@ -22,6 +22,12 @@ extension View {
             )
         )
     }
+
+    func linearGradientAnimationStyle() -> some View {
+        modifier(
+            Styles.linearGradientAnimation()
+        )
+    }
 }
 
 extension View {

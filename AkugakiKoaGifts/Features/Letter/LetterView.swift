@@ -26,8 +26,8 @@ struct LetterView: View {
             ScrollToImageAnimationView(
                 text: viewModel.body,
                 imageName: viewModel.imageName,
-                backgroundColor: .letterBackgroundColor,
-                fadeBackgroundColor: .letterFadeBackgroundColor
+                backgroundColor: .letterBackground,
+                fadeBackgroundColor: .letterFadeBackground
             )
             .safeAreaInset(edge: .bottom) {
                 AudioPlayerView(

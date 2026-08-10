@@ -11,10 +11,12 @@ struct ArtGalleryView: View {
     @Namespace private var zoomNamespace
     @State private var selectedImage: IdentifiableImageResource? = nil
 
-    private let randomImages: [IdentifiableImageResource] = (0 ... 25).map { _ in
-        // TODO: CHECK THIS THAT IT'S NOT WORKING!!!
-        ImageBuilder.randomIdentifiableImage
-    }
+//    private let randomImages: [IdentifiableImageResource] = (0 ... 4).map { _ in
+//        // TODO: CHECK THIS THAT IT'S NOT WORKING!!!
+//        ImageBuilder.randomIdentifiableImage
+//    }
+
+    private let randomImages: [IdentifiableImageResource] = ImageBuilder.imageResources
 
     private let gridItemWidth = 100.0
     private let columns: [GridItem]

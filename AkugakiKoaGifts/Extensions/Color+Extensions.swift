@@ -8,7 +8,8 @@
 import SwiftUI
 
 public extension Color {
-    static let letterBackgroundColor = Color("letterBackgroundColor", bundle: .main)
-    static let letterFadeBackgroundColor = Color("letterFadeBackgroundColor", bundle: .main)
-    static let letterFontColor = Color("letterFontColor", bundle: .main)
+//    static let letterBackground = Color("letterBackground", bundle: .main)
+//    static let letterFadeBackground = Color("letterFadeBackground", bundle: .main)
+//    static let letterFont = Color("letterFont", bundle: .main)
+//    static let akugakiKoaImagesShadow = Color("akugakiKoaImagesShadow", bundle: .main)
 }

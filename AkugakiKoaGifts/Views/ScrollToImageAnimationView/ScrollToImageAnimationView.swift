@@ -66,7 +66,7 @@ struct ScrollToImageAnimationView: View {
                     VStack(spacing: 20) {
                         Text(text)
                             .font(.system(.title3, design: .rounded, weight: .regular))
-                            .foregroundStyle(Color.letterFontColor)
+                            .foregroundStyle(Color.letterFont)
                             .padding()
 
                         if let name = imageName {
@@ -121,6 +121,6 @@ struct ScrollToImageAnimationView: View {
         """,
         imageName: "testImage",
         backgroundColor: .cyanCrystal.opacity(0.25),
-        fadeBackgroundColor: .letterFadeBackgroundColor
+        fadeBackgroundColor: .letterFadeBackground
     )
 }

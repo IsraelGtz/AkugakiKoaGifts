@@ -33,4 +33,34 @@ enum Styles {
                 .padding()
         }
     }
+
+    struct linearGradientAnimation: ViewModifier {
+        @State private var startPoint = UnitPoint(x: -1, y: 0)
+        @State private var endPoint = UnitPoint(x: 0, y: 0)
+        let colors: [Color] = [.letterFont, .cyan, .blue, .purpleGradientAnimation]
+
+        func body(content: Content) -> some View {
+            content
+                .font(.system(.headline, design: .rounded))
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: colors,
+                        startPoint: startPoint,
+                        endPoint: endPoint
+                    )
+                )
+                .onAppear {
+                    withAnimation(
+                        .linear(duration: Double.random(in: 4 ... 5.5))
+                    ) {
+                        startPoint = UnitPoint(x: 1, y: 0)
+                        endPoint = UnitPoint(x: 2, y: 0)
+                    }
+                }
+        }
+    }
+}
+
+#Preview {
+    AkugakiKoaView()
 }

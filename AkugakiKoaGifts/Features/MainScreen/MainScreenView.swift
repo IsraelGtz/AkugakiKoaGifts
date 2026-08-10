@@ -10,8 +10,8 @@ import SwiftUI
 struct MainScreenView: View {
     var body: some View {
         TabView {
-            Tab("Koa", image: "koaTabIcon") {
-                Text("info")
+            Tab("Akugaki Koa", image: "koaTabIcon") {
+                AkugakiKoaView()
             }
             Tab("Letters", systemImage: "envelope") {
                 LetterListView()
@@ -26,4 +26,8 @@ struct MainScreenView: View {
             }
         }
     }
+}
+
+#Preview {
+    MainScreenView()
 }

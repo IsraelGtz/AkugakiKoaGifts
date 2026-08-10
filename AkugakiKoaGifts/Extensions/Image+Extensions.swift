@@ -13,6 +13,7 @@ extension Image {
         minSize: CGSize? = nil,
         maxSize: CGSize? = nil,
         applyGradient: Bool = true,
+        gradientColors: Gradient = Gradient(colors: [.black, .black, .clear]),
         gradientStartRadius: CGFloat = 0,
         gradientEndRadius: CGFloat = 100
     ) -> some View {
@@ -30,7 +31,7 @@ extension Image {
                     .clipShape(Circle())
                     .mask {
                         RadialGradient(
-                            gradient: Gradient(colors: [.black, .black, .clear]),
+                            gradient: gradientColors,
                             center: .center,
                             startRadius: gradientStartRadius,
                             endRadius: gradientEndRadius
