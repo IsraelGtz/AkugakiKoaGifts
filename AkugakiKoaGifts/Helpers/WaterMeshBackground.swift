@@ -8,26 +8,16 @@
 import SwiftUI
 
 struct WaterMeshBackground: View {
-//    private let colors: [Color] = [
-//        .teal, .blue, .cyan,
-//        .blue, .indigo, .teal,
-//        .cyan, .teal, .indigo
-//    ]
+    private let colors: [Color]
 
-    private let colors: [Color] = [
-        .topLeftWaterMesh, .topCenterWaterMesh, .topRightWaterMesh,
-        .middleLeftWaterMesh, .middleCenterWaterMesh, .middleRightWaterMesh,
-        .bottomLeftWaterMesh, .bottomCenterWaterMesh, .bottomRightWaterMesh,
-    ]
-
-//    private let colors: [Color] = [
-//        .gray.opacity(0.1), .black.opacity(0.65) , .cyan,
-//        .gray.opacity(0.4), .black.opacity(0.5) , .blue,
-//        .gray.opacity(0.6), .black.opacity(0.35) , .teal,
-//    ]
-
-    private var randomColor: Color {
-        colors.randomElement() ?? .cyan
+    init(
+        colors: [Color] = [
+            .topLeftWaterMesh, .topCenterWaterMesh, .topRightWaterMesh,
+            .middleLeftWaterMesh, .middleCenterWaterMesh, .middleRightWaterMesh,
+            .bottomLeftWaterMesh, .bottomCenterWaterMesh, .bottomRightWaterMesh,
+        ]
+    ) {
+        self.colors = colors
     }
 
     var body: some View {
