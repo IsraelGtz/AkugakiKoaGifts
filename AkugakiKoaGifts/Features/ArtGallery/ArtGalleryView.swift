@@ -9,7 +9,9 @@ import SwiftUI
 
 struct ArtGalleryView: View {
     @Namespace private var zoomNamespace
+    @Namespace private var galleryNamespace
     @State private var selectedImage: IdentifiableImageResource? = nil
+    @State private var isItPossibleToOpenViewer: Bool = true
 
 //    private let randomImages: [IdentifiableImageResource] = (0 ... 4).map { _ in
 //        // TODO: CHECK THIS THAT IT'S NOT WORKING!!!
@@ -26,32 +28,47 @@ struct ArtGalleryView: View {
     }
 
     var body: some View {
-        List {
-            LazyVGrid(columns: columns, spacing: 4) {
-                drawsSection
-                stickersSection
-                gifsSection
+        ZStack {
+            List {
+                LazyVGrid(columns: columns, spacing: 4) {
+                    drawsSection
+//                    stickersSection
+                    gifsSection
+                }
+            }
+            .ignoresSafeArea(.keyboard)
+            .listStyle(.plain)
+            if let selectedImage {
+                ImageViewer(
+                    image: selectedImage,
+                    nameSpace: galleryNamespace,
+                    selectedImage: $selectedImage,
+                    isItPossibleToOpenViewer: $isItPossibleToOpenViewer
+                )
+                .id(selectedImage.id)
+                .transition(.asymmetric(insertion: .identity, removal: .identity))
             }
         }
-        .fullScreenCover(item: $selectedImage) { image in
-            ImageViewer(image: image)
-        }
-        .ignoresSafeArea(.keyboard)
-        .listStyle(.plain)
     }
 
     @ViewBuilder
     private var drawsSection: some View {
         Section {
             ForEach(ImageBuilder.imageResources) { image in
+                let isSelected = selectedImage?.id == image.id
+
                 Image(image.resource)
                     .genericStyle(
                         minSize: .init(width: gridItemWidth, height: gridItemWidth),
                         applyGradient: false
                     )
-                    .matchedTransitionSource(id: image.id, in: zoomNamespace)
+                    .opacity(isSelected ? 0 : 1)
+                    .matchedGeometryEffect(id: image.id, in: galleryNamespace)
                     .onTapGesture {
-                        selectedImage = image
+                        guard isItPossibleToOpenViewer else { return }
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.85, blendDuration: 1)) {
+                            selectedImage = image
+                        }
                     }
             }
         } header: {

@@ -76,8 +76,9 @@ struct AkugakiKoaView: View {
         text: String,
         author: String?
     ) -> some View {
-        VStack {
+        VStack(spacing: 8) {
             Text(text)
+                .multilineTextAlignment(.leading)
             if let author {
                 HStack {
                     Spacer()

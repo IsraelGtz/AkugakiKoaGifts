@@ -22,7 +22,7 @@ struct MainScreenView: View {
             }
 
             Tab("Credits", systemImage: "person.3") {
-                ImageViewer(image: .init(.koaNya))
+                Text("Credits")
             }
         }
     }
