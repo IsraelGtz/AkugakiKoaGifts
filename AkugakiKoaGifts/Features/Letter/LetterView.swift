@@ -30,10 +30,12 @@ struct LetterView: View {
                 fadeBackgroundColor: .letterFadeBackground
             )
             .safeAreaInset(edge: .bottom) {
-                AudioPlayerView(
-                    audioFileName: "test",
-                    audioFileExtension: "caf"
-                )
+                if let audioFileName = viewModel.audioFileName {
+                    AudioPlayerView(
+                        audioFileName: audioFileName,
+                        audioFileExtension: "caf"
+                    )
+                }
             }
             .navigationTitle(viewModel.title)
             .navigationBarTitleDisplayMode(.large)

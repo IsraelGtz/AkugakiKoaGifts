@@ -24,6 +24,10 @@ class LetterViewModel {
         letter.imageName
     }
 
+    var audioFileName: String? {
+        letter.audioName
+    }
+
     @ViewBuilder
     var image: some View {
         if let imageName = letter.imageName,
