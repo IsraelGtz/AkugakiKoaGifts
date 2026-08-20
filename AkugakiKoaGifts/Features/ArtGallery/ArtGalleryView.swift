@@ -11,7 +11,6 @@ struct ArtGalleryView: View {
     @Namespace private var zoomNamespace
     @Namespace private var galleryNamespace
     @State private var selectedImage: IdentifiableImageResource? = nil
-    @State private var isItPossibleToOpenViewer: Bool = true
 
 //    private let randomImages: [IdentifiableImageResource] = (0 ... 4).map { _ in
 //        // TODO: CHECK THIS THAT IT'S NOT WORKING!!!
@@ -32,7 +31,6 @@ struct ArtGalleryView: View {
             List {
                 LazyVGrid(columns: columns, spacing: 4) {
                     drawsSection
-//                    stickersSection
                     gifsSection
                 }
             }
@@ -42,11 +40,12 @@ struct ArtGalleryView: View {
                 ImageViewer(
                     image: selectedImage,
                     nameSpace: galleryNamespace,
-                    selectedImage: $selectedImage,
-                    isItPossibleToOpenViewer: $isItPossibleToOpenViewer
+                    selectedImage: $selectedImage
                 )
+                .zIndex(1)
                 .id(selectedImage.id)
-                .transition(.asymmetric(insertion: .identity, removal: .identity))
+                .transition(.asymmetric(insertion: .opacity, removal: .opacity))
+                .toolbarVisibility(.hidden, for: .tabBar)
             }
         }
     }
@@ -56,17 +55,19 @@ struct ArtGalleryView: View {
         Section {
             ForEach(ImageBuilder.imageResources) { image in
                 let isSelected = selectedImage?.id == image.id
-
                 Image(image.resource)
                     .genericStyle(
                         minSize: .init(width: gridItemWidth, height: gridItemWidth),
                         applyGradient: false
                     )
                     .opacity(isSelected ? 0 : 1)
-                    .matchedGeometryEffect(id: image.id, in: galleryNamespace)
+                    .matchedGeometryEffect(
+                        id: image.id,
+                        in: galleryNamespace,
+                        isSource: selectedImage != nil ? false : true
+                    )
                     .onTapGesture {
-                        guard isItPossibleToOpenViewer else { return }
-                        withAnimation(.spring(response: 0.4, dampingFraction: 0.85, blendDuration: 1)) {
+                        withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
                             selectedImage = image
                         }
                     }
@@ -117,5 +118,5 @@ struct ArtGalleryView: View {
 }
 
 #Preview {
-    ArtGalleryView()
+    MainScreenView()
 }

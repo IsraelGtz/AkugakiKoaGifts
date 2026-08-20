@@ -11,14 +11,12 @@ struct ImageViewer: View {
     let image: IdentifiableImageResource
     let nameSpace: Namespace.ID
     @Binding var selectedImage: IdentifiableImageResource?
-    @Binding var isItPossibleToOpenViewer: Bool
 
-    @State private var currentScale: CGFloat = 0
+    @GestureState private var currentScale: CGFloat = 1
+    @GestureState private var currentOffset: CGSize = .zero
     @State private var finalScale: CGFloat = 1.0
-    @State private var backgroundOpacity: Double = 1.0
-    @State private var currentOffset: CGSize = .zero
     @State private var finalOffset: CGSize = .zero
-    @State private var isFullyExpanded: Bool = false
+    @State private var backgroundOpacity: Double = 1.0
     private let viewModel: ImageViewerViewModel = .init()
 
     var body: some View {
@@ -32,83 +30,69 @@ struct ImageViewer: View {
         }
         .background(.black.opacity(backgroundOpacity))
         .edgesIgnoringSafeArea(.all)
+        .onTapGesture(count: 2) {
+            resetPositionAndScale()
+        }
         .onAppear {
             backgroundOpacity = 1.0
-            finalScale = 1.0
-            currentOffset = .zero
-            finalOffset = .zero
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                isFullyExpanded = true
-            }
         }
     }
 
     @ViewBuilder
     private func buildImageWith(proxy: GeometryProxy) -> some View {
-        if isFullyExpanded {
-            Image(image.resource)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .matchedGeometryEffect(id: image.id, in: nameSpace)
-                .frame(width: proxy.size.width, height: proxy.size.height)
-                .scaleEffect(finalScale + currentScale)
-                .offset(x: finalOffset.width + currentOffset.width,
-                        y: finalOffset.height + currentOffset.height)
-                .gesture(
-                    MagnifyGesture()
-                        .onChanged { value in
-                            // Inside onChanged, magnification maps natively to scale change
-                            currentScale = value.magnification - 1
-                        }
-                        .onEnded { _ in
-                            finalScale += currentScale
-                            currentScale = 0
-
-                            // Prevent zooming out smaller than original size
-                            if finalScale < 1.0 {
-                                withAnimation(.spring()) {
-                                    finalScale = 1.0
-                                    finalOffset = .zero // Reset positions
-                                }
+        Image(image.resource)
+            .resizable()
+            .scaledToFit()
+            .aspectRatio(contentMode: .fit)
+            .matchedGeometryEffect(id: image.id, in: nameSpace, isSource: false)
+            .frame(width: proxy.size.width, height: proxy.size.height)
+            .scaleEffect(finalScale * currentScale)
+            .offset(
+                x: finalOffset.width + currentOffset.width,
+                y: finalOffset.height + currentOffset.height
+            )
+            .gesture(
+                MagnifyGesture()
+                    .updating($currentScale, body: { value, state, _ in
+                        state = value.magnification
+                    })
+                    .onEnded { value in
+                        finalScale *= value.magnification
+                        // Prevent zooming out smaller than original size
+                        if finalScale < 1.0 {
+                            withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
+                                finalScale = 1.0
+                                finalOffset = .zero
                             }
                         }
-                        .simultaneously(
-                            with: DragGesture()
-                                .onChanged { value in
-                                    // set the position based on the dragging value
-                                    let verticalDistance = value.translation.height
-                                    currentOffset = value.translation
-                                    if finalScale <= 1 {
-                                        updateBackgroundOpacityAndScale(with: verticalDistance)
-                                    }
+                    }
+                    .simultaneously(
+                        with: DragGesture()
+                            .updating($currentOffset, body: { value, state, _ in
+                                state = value.translation
+                            })
+                            .onChanged { value in
+                                let verticalDistance = value.translation.height
+                                if finalScale <= 1 {
+                                    updateBackgroundOpacityAndScale(with: verticalDistance)
                                 }
-                                .onEnded { value in
-                                    if finalScale >= 1.0 {
-                                        updateImageOffset()
-                                    }
-                                    if shouldResetImagePositionAfterDrag(with: value) {
-                                        resetPositionAndScale()
-                                    }
-                                    if shouldDismissImage(with: value) {
-                                        dismissImage()
-                                    }
+                            }
+                            .onEnded { value in
+                                if finalScale > 1.0 {
+                                    //If there is any scale applied just move
+                                    updateImageOffset(with: value.translation)
                                 }
-                        )
-                )
-                .onTapGesture(count: 2) {
-                    resetPositionAndScale()
-                }
-                .onDisappear {
-                    dismissImage()
-                }
-        } else {
-            Image(image.resource)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .matchedGeometryEffect(id: image.id, in: nameSpace)
-                .frame(width: proxy.size.width, height: proxy.size.height)
-        }
+                                if shouldResetImagePositionAfterDrag(with: value) {
+                                    //Applied when the image, with no scale applied is moved around
+                                    finalOffset = value.translation
+                                    resetPositionAndScale()
+                                }
+                                if shouldDismissImage(with: value) {
+                                    dismissImage()
+                                }
+                            }
+                    )
+            )
     }
 
     private func shouldDismissImage(with value: DragGesture.Value) -> Bool {
@@ -116,16 +100,17 @@ struct ImageViewer: View {
             value.translation.height >= 200
     }
 
-    private func shouldResetImagePositionAfterDrag(with value: DragGesture.Value) -> Bool {
+    private func shouldResetImagePositionAfterDrag(
+        with value: DragGesture.Value
+    ) -> Bool {
         finalScale <= 1.0 &&
             value.translation.height > -CGFloat.greatestFiniteMagnitude &&
             value.translation.height < 200
     }
 
-    private func updateImageOffset() {
-        finalOffset.width += currentOffset.width
-        finalOffset.height += currentOffset.height
-        currentOffset = .zero
+    private func updateImageOffset(with translation: CGSize) {
+        finalOffset.width += translation.width
+        finalOffset.height += translation.height
     }
 
     private func updateBackgroundOpacityAndScale(with distance: CGFloat) {
@@ -139,26 +124,17 @@ struct ImageViewer: View {
     }
 
     private func resetPositionAndScale() {
-        withAnimation(.spring()) {
+        withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
             finalScale = 1.0
             finalOffset = .zero
-            currentScale = 0
-            currentOffset = .zero
             backgroundOpacity = 1
         }
     }
 
     private func dismissImage() {
-        isItPossibleToOpenViewer = false
-        withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
-            finalOffset = .zero
-            currentOffset = .zero
-            finalScale = 1.0
-            backgroundOpacity = 0.0
+        withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
             selectedImage = nil
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                isItPossibleToOpenViewer = true
-            }
+            backgroundOpacity = 0.0
         }
     }
 }

@@ -19,6 +19,7 @@ extension Image {
     ) -> some View {
         resizable()
             .scaledToFit()
+            .aspectRatio(contentMode: .fit)
             .frame(
                 minWidth: minSize?.width,
                 idealWidth: idealSize?.width,
