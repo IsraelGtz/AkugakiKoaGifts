@@ -79,11 +79,11 @@ struct ImageViewer: View {
                             }
                             .onEnded { value in
                                 if finalScale > 1.0 {
-                                    //If there is any scale applied just move
+                                    // If there is any scale applied just move
                                     updateImageOffset(with: value.translation)
                                 }
                                 if shouldResetImagePositionAfterDrag(with: value) {
-                                    //Applied when the image, with no scale applied is moved around
+                                    // Applied when the image, with no scale applied is moved around
                                     finalOffset = value.translation
                                     resetPositionAndScale()
                                 }

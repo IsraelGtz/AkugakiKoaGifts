@@ -33,7 +33,6 @@ struct AkugakiKoaView: View {
             WaterMeshBackground()
                 .ignoresSafeArea()
             List {
-                title
                 mainImage
                 ForEach(definitions, id: \.self) { definition in
                     buildKoaDefinitionCell(
@@ -45,15 +44,9 @@ struct AkugakiKoaView: View {
             .scrollContentBackground(.hidden)
             .listStyle(.plain)
             .listRowSpacing(0)
+            .navigationTitle("Who is Akugaki Koa? ↝")
+            .navigationBarTitleDisplayMode(.large)
         }
-    }
-
-    @ViewBuilder
-    private var title: some View {
-        Text("Who is Akugaki Koa? ↝")
-            .frame(maxWidth: .infinity, alignment: .center)
-            .font(.system(.title, design: .rounded, weight: .semibold))
-            .listRowBackground(Color.clear)
     }
 
     @ViewBuilder

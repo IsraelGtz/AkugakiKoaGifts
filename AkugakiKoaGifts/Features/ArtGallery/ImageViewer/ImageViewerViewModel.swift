@@ -22,37 +22,16 @@ class ImageViewerViewModel {
         }
     }
 
+    func save(gif name: String) {
+        saver.save(gif: name)
+    }
+
     func save(image: IdentifiableImageResource?) {
-        requestPhotoLibraryWriteAccess()
         guard
             let image
         else {
             return
         }
         saver.writeToPhotoAlbum(image: UIImage(resource: image.resource))
-    }
-
-    private func requestPhotoLibraryWriteAccess() {
-        let status = PHPhotoLibrary.authorizationStatus(for: .addOnly)
-
-        switch status {
-        case .notDetermined:
-            PHPhotoLibrary.requestAuthorization(for: .addOnly) { newStatus in
-                if newStatus == .authorized || newStatus == .limited {
-                    // Call your save function here
-                } else {}
-            }
-
-        case .authorized, .limited:
-            print("Permission already granted.")
-            // Call your save function here
-
-        case .denied, .restricted:
-            print("Permission denied or restricted. Direct the user to iOS Settings.")
-            // Optional: Show an alert guiding the user to App Settings
-
-        @unknown default:
-            break
-        }
     }
 }

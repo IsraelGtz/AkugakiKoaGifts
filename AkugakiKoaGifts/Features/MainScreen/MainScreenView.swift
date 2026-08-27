@@ -11,14 +11,20 @@ struct MainScreenView: View {
     var body: some View {
         TabView {
             Tab("Akugaki Koa", image: "koaTabIcon") {
-                AkugakiKoaView()
+                NavigationStack {
+                    AkugakiKoaView()
+                }
             }
             Tab("Letters", systemImage: "envelope") {
-                LetterListView()
+                NavigationStack {
+                    LetterListView()
+                }
             }
 
-            Tab("Art", systemImage: "paintpalette") {
-                ArtGalleryView()
+            Tab("Gallery", systemImage: "paintpalette") {
+                NavigationStack {
+                    ArtGalleryView()
+                }
             }
 
             Tab("Credits", systemImage: "person.3") {

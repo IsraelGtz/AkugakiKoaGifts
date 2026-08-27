@@ -11,13 +11,10 @@ struct ArtGalleryView: View {
     @Namespace private var zoomNamespace
     @Namespace private var galleryNamespace
     @State private var selectedImage: IdentifiableImageResource? = nil
+    @State private var selectedGif: String? = nil
 
-//    private let randomImages: [IdentifiableImageResource] = (0 ... 4).map { _ in
-//        // TODO: CHECK THIS THAT IT'S NOT WORKING!!!
-//        ImageBuilder.randomIdentifiableImage
-//    }
-
-    private let randomImages: [IdentifiableImageResource] = ImageBuilder.imageResources
+    private let viewModel = ImageViewerViewModel()
+    private let gifNames: [String] = ["koaGif", "chaosInSmallDoses720"]
 
     private let gridItemWidth = 100.0
     private let columns: [GridItem]
@@ -37,17 +34,16 @@ struct ArtGalleryView: View {
             .ignoresSafeArea(.keyboard)
             .listStyle(.plain)
             if let selectedImage {
-                ImageViewer(
-                    image: selectedImage,
-                    nameSpace: galleryNamespace,
-                    selectedImage: $selectedImage
-                )
-                .zIndex(1)
-                .id(selectedImage.id)
-                .transition(.asymmetric(insertion: .opacity, removal: .opacity))
-                .toolbarVisibility(.hidden, for: .tabBar)
+                zoomableImage(with: selectedImage)
+            }
+            if let selectedGif {
+                zoomableGif(with: selectedGif)
+                    .id(selectedGif)
+                    .compositingGroup()
             }
         }
+        .navigationTitle("Gallery")
+        .navigationBarTitleDisplayMode(.large)
     }
 
     @ViewBuilder
@@ -79,41 +75,66 @@ struct ArtGalleryView: View {
     }
 
     @ViewBuilder
-    private var stickersSection: some View {
-        Section {
-            ForEach(
-                randomImages
-            ) { image in
-                Image(image.resource)
-                    .genericStyle(
-                        minSize: .init(width: gridItemWidth, height: gridItemWidth),
-                        applyGradient: false
-                    )
-                    .matchedTransitionSource(id: image.id, in: zoomNamespace)
-                    .onTapGesture {
-                        selectedImage = image
-                    }
-            }
-        } header: {
-            Text("Stickers")
-                .titleCellStyle(style: .title2, color: .cyan)
-                .padding(.top, 18)
-        }
-    }
-
-    @ViewBuilder
     private var gifsSection: some View {
         Section {
-            ForEach(1 ..< 4) { _ in
-                LocalGIFViewer(name: "koaGif")
-                    .aspectRatio(1, contentMode: .fill)
+            ForEach(gifNames, id: \.self) { gif in
+                let isSelected = selectedGif == gif
+                LocalGIFViewer(name: gif)
+                    .aspectRatio(1, contentMode: .fit)
                     .frame(minWidth: gridItemWidth)
+                    .contentShape(Rectangle())
+                    .opacity(isSelected ? 0 : 1)
+                    .matchedGeometryEffect(
+                        id: gif,
+                        in: galleryNamespace,
+                        isSource: selectedGif != nil ? false : true
+                    )
+                    .onTapGesture {
+                        withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
+                            selectedGif = gif
+                        }
+                    }
             }
         } header: {
             Text("Gifs")
                 .titleCellStyle(style: .title2, color: .cyan)
                 .padding(.top, 18)
         }
+    }
+
+    @ViewBuilder
+    private func zoomableImage(with image: IdentifiableImageResource) -> some View {
+        Image(image.resource)
+            .resizable()
+            .scaledToFit()
+            .aspectRatio(contentMode: .fit)
+            .zIndex(1)
+            .id(image.id)
+            .transition(.asymmetric(insertion: .opacity, removal: .opacity))
+            .toolbarVisibility(.hidden, for: .tabBar)
+            .matchedGeometryEffect(id: image.id, in: galleryNamespace, isSource: false)
+            .zoomable(contextMenu: .init(title: "Save Image", action: {
+                viewModel.save(image: image)
+            }), dismissAction: {
+                selectedImage = nil
+            })
+    }
+
+    @ViewBuilder
+    private func zoomableGif(with name: String) -> some View {
+        LocalGIFViewer(name: name)
+            .aspectRatio(1, contentMode: .fit)
+            .contentShape(Rectangle())
+            .zIndex(1)
+            .id(name)
+            .transition(.asymmetric(insertion: .opacity, removal: .opacity))
+            .toolbarVisibility(.hidden, for: .tabBar)
+            .matchedGeometryEffect(id: name, in: galleryNamespace, isSource: false)
+            .zoomable(contextMenu: .init(title: "Save Image", action: {
+                viewModel.save(gif: name)
+            }), dismissAction: {
+                selectedGif = nil
+            })
     }
 }
 

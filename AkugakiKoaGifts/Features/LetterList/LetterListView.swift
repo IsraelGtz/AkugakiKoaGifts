@@ -14,15 +14,13 @@ struct LetterListView: View {
     @Namespace private var zoomNamespace
 
     var body: some View {
-        NavigationStack {
-            switch viewModel.state {
-            case .idle, .loading:
-                ProgressView()
-            case .didLoad:
-                letterList
-            case let .error(error):
-                buildErrorView(with: error)
-            }
+        switch viewModel.state {
+        case .idle, .loading:
+            ProgressView()
+        case .didLoad:
+            letterList
+        case let .error(error):
+            buildErrorView(with: error)
         }
     }
 

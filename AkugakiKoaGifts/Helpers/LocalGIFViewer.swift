@@ -13,8 +13,7 @@ struct LocalGIFViewer: UIViewRepresentable {
 
     func makeUIView(context _: Context) -> UIImageView {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFit
 
         imageView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         imageView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
@@ -23,8 +22,11 @@ struct LocalGIFViewer: UIViewRepresentable {
 
         guard let asset = NSDataAsset(name: name) else { return imageView }
 
-        CGAnimateImageDataWithBlock(asset.data as CFData, nil) { [weak imageView] _, cgImage, _ in
-            guard let imageView else { return }
+        CGAnimateImageDataWithBlock(asset.data as CFData, nil) { [weak imageView] _, cgImage, stopPointer in
+            guard let imageView = imageView else {
+                stopPointer.pointee = true
+                return
+            }
 
             DispatchQueue.main.async {
                 imageView.image = UIImage(cgImage: cgImage)
