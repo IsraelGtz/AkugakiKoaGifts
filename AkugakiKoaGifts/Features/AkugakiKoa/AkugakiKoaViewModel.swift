@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import KoaneKoanikisLettersStorage
+import KoaGiftsStorage
 
 enum AkugakiKoaViewState {
     case idle
@@ -26,7 +26,7 @@ class AkugakiKoaViewModel {
     func getKoaDefinitions() {
         state = .loading
         do {
-            let definitions = try KoaneKoanikisLettersStorage.shared.fetchDefinitions()
+            let definitions = try KoaGiftsStorage.shared.fetchDefinitions()
             state = .loaded(definitions)
         } catch {
             state = .error(error)

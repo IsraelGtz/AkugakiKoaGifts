@@ -9,9 +9,7 @@ import SwiftUI
 
 extension Image {
     func genericStyle(
-        idealSize: CGSize? = nil,
-        minSize: CGSize? = nil,
-        maxSize: CGSize? = nil,
+        scaleEffect: CGFloat = 1.5,
         applyGradient: Bool = true,
         gradientColors: Gradient = Gradient(colors: [.black, .black, .clear]),
         gradientStartRadius: CGFloat = 0,
@@ -20,13 +18,7 @@ extension Image {
         resizable()
             .scaledToFit()
             .aspectRatio(contentMode: .fit)
-            .frame(
-                minWidth: minSize?.width,
-                idealWidth: idealSize?.width,
-                maxWidth: maxSize?.width,
-                minHeight: minSize?.height,
-                maxHeight: maxSize?.height
-            )
+            .scaleEffect(scaleEffect)
             .if(applyGradient, transform: { view in
                 view
                     .clipShape(Circle())

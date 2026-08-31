@@ -15,9 +15,9 @@ struct MainScreenView: View {
                     AkugakiKoaView()
                 }
             }
-            Tab("Letters", systemImage: "envelope") {
+            Tab("Gifts", systemImage: "gift.fill") {
                 NavigationStack {
-                    LetterListView()
+                    GiftsView()
                 }
             }
 

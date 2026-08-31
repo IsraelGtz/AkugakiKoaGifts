@@ -5,7 +5,7 @@
 //  Created by Israel Gutiérrez Castillo on 16.7.2026.
 //
 
-import KoaneKoanikisLettersStorage
+import KoaGiftsStorage
 import SwiftUI
 
 @Observable

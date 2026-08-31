@@ -53,7 +53,7 @@ struct ArtGalleryView: View {
                 let isSelected = selectedImage?.id == image.id
                 Image(image.resource)
                     .genericStyle(
-                        minSize: .init(width: gridItemWidth, height: gridItemWidth),
+                        scaleEffect: 1,
                         applyGradient: false
                     )
                     .opacity(isSelected ? 0 : 1)

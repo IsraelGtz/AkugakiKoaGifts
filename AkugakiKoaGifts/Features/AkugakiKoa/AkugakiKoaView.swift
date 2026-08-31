@@ -5,7 +5,7 @@
 //  Created by Israel Gutiérrez Castillo on 9.8.2026.
 //
 
-import KoaneKoanikisLettersStorage
+import KoaGiftsStorage
 import SwiftUI
 
 struct AkugakiKoaView: View {

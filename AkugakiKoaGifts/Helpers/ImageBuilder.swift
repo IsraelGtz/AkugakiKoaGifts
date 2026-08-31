@@ -30,9 +30,7 @@ enum ImageBuilder {
     }
 
     static func getAllImages(
-        idealSize: CGSize? = nil,
-        minSize: CGSize? = nil,
-        maxSize: CGSize? = nil,
+        scaleEffect: CGFloat = 1.5,
         applyGradient: Bool = true,
         gradientStartRadius: CGFloat = 0,
         gradientEndRadius: CGFloat = 100
@@ -40,9 +38,7 @@ enum ImageBuilder {
         imageResources.compactMap { image in
             Image(image.resource)
                 .genericStyle(
-                    idealSize: idealSize,
-                    minSize: minSize,
-                    maxSize: maxSize,
+                    scaleEffect: scaleEffect,
                     applyGradient: applyGradient,
                     gradientStartRadius: gradientStartRadius,
                     gradientEndRadius: gradientEndRadius
@@ -52,18 +48,14 @@ enum ImageBuilder {
 
     @ViewBuilder
     static func getRandomImage(
-        idealSize: CGSize? = nil,
-        minSize: CGSize? = nil,
-        maxSize: CGSize? = nil,
+        scaleEffect: CGFloat = 1.5,
         applyGradient: Bool = true,
         gradientStartRadius: CGFloat = 0,
-        gradientEndRadius: CGFloat = 100
+        gradientEndRadius: CGFloat = 85
     ) -> some View {
         Image(randomIdentifiableImage.resource)
             .genericStyle(
-                idealSize: idealSize,
-                minSize: minSize,
-                maxSize: maxSize,
+                scaleEffect: scaleEffect,
                 applyGradient: applyGradient,
                 gradientStartRadius: gradientStartRadius,
                 gradientEndRadius: gradientEndRadius

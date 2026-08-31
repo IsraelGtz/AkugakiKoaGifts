@@ -6,7 +6,7 @@
 //
 
 import AudioPlayer
-import KoaneKoanikisLettersStorage
+import KoaGiftsStorage
 import SwiftUI
 
 struct LetterView: View {

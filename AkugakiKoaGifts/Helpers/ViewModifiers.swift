@@ -27,7 +27,13 @@ enum Styles {
 
         func body(content: Content) -> some View {
             content
-                .font(.system(style, design: .serif, weight: .semibold))
+                .font(
+                    .system(
+                        style,
+                        design: .serif,
+                        weight: .semibold
+                    )
+                )
                 .minimumScaleFactor(minimumScaleFactor)
                 .foregroundStyle(color)
                 .padding()
@@ -62,5 +68,5 @@ enum Styles {
 }
 
 #Preview {
-    AkugakiKoaView()
+    GiftsView()
 }
