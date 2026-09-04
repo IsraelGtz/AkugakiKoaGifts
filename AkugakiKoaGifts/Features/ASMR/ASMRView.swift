@@ -11,7 +11,7 @@ import SwiftUI
 
 struct ASMRView: View {
     let asmr: ASMR
-    
+
     var body: some View {
         List {
             Text(asmr.title)

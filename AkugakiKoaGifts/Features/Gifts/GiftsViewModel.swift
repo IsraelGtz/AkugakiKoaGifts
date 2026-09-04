@@ -33,6 +33,7 @@ class GiftsViewModel {
         fetchASMRs()
         state = .didLoad
     }
+
     private func fetchLetters() {
         do {
             let letters = try storage.fetchLetters()
@@ -42,7 +43,7 @@ class GiftsViewModel {
             state = .error(error)
         }
     }
-    
+
     private func fetchASMRs() {
         do {
             let asmrs = try storage.fetchASMRs()

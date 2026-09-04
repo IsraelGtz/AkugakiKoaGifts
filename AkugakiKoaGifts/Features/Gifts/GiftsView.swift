@@ -39,7 +39,6 @@ struct GiftsView: View {
             ASMRView(asmr: asmr)
                 .navigationTransition(.zoom(sourceID: asmr.id, in: zoomNamespace))
         })
-
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .listRowSpacing(12)
@@ -63,16 +62,16 @@ struct GiftsView: View {
         }
         .listSectionSeparator(.hidden)
     }
-    
+
     @ViewBuilder
     private var asmrsSection: some View {
         Section {
             ForEach(viewModel.asmrs) { asmr in
                 Text(asmr.title)
-                .matchedTransitionSource(id: asmr.id, in: zoomNamespace)
-                .onTapGesture {
-                    selectedASMR = asmr
-                }
+                    .matchedTransitionSource(id: asmr.id, in: zoomNamespace)
+                    .onTapGesture {
+                        selectedASMR = asmr
+                    }
             }
         } header: {
             Text("ASMRs")

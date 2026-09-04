@@ -12,40 +12,45 @@ struct AkugakiKoaView: View {
     @State private var viewModel = AkugakiKoaViewModel()
 
     var body: some View {
-        switch viewModel.state {
-        case .idle, .loading:
-            ProgressView()
-        case let .loaded(definitions):
-            buildListOfDefinitions(definitions)
-        case let .error(error):
-            VStack {
-                Text("Error loading information")
-                Text(error.localizedDescription)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func buildListOfDefinitions(
-        _ definitions: [KoaDefinition]
-    ) -> some View {
         ZStack {
             WaterMeshBackground()
                 .ignoresSafeArea()
             List {
                 mainImage
-                ForEach(definitions, id: \.self) { definition in
-                    buildKoaDefinitionCell(
-                        text: definition.body,
-                        author: definition.author
-                    )
+                switch viewModel.definitionsState {
+                case .idle, .loading:
+                    ProgressView()
+                case let .loaded(definitions):
+                    AkugakiKoaDefinitionsView(definitions)
+                case let .error(error):
+                    VStack {
+                        Text("Error loading information")
+                        Text(error.localizedDescription)
+                    }
+                }
+
+                switch viewModel.videoSectionsState {
+                case .idle, .loading, .error:
+                    EmptyView()
+                case let .loaded(
+                    specialGuestAppearances,
+                    liveConcerts,
+                    covers
+                ):
+                    KoaVideoSectionsView(
+                        specialGuestAppearances: specialGuestAppearances,
+                        liveConcerts: liveConcerts,
+                        covers: covers
+                    ).id(1)
                 }
             }
-            .scrollContentBackground(.hidden)
             .listStyle(.plain)
+            .scrollContentBackground(.hidden)
             .listRowSpacing(0)
-            .navigationTitle("Who is Akugaki Koa? ↝")
+            .navigationTitle("↜ Who is Akugaki Koa? ↝")
             .navigationBarTitleDisplayMode(.large)
+            .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
+            .toolbarBackground(.ultraThinMaterial, for: .tabBar)
         }
     }
 
@@ -63,33 +68,9 @@ struct AkugakiKoaView: View {
             .padding(.top, 8)
             .padding(.bottom, 12)
     }
-
-    @ViewBuilder
-    private func buildKoaDefinitionCell(
-        text: String,
-        author: String?
-    ) -> some View {
-        VStack(spacing: 8) {
-            Text(text)
-                .multilineTextAlignment(.leading)
-            if let author {
-                HStack {
-                    Spacer()
-                    Text(author)
-                }
-            }
-        }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(.ultraThinMaterial)
-        )
-        .linearGradientAnimationStyle()
-        .listRowSeparator(.hidden)
-        .listRowBackground(Color.clear)
-    }
 }
 
 #Preview {
     MainScreenView()
+        .environment(NetworkMonitor())
 }

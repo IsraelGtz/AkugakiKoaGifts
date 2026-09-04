@@ -9,13 +9,17 @@ import SwiftUI
 
 @main
 struct AkugakiKoaGiftsApp: App {
+    @State private var networkMonitor = NetworkMonitor()
+
     var body: some Scene {
         WindowGroup {
             MainScreenView()
+                .environment(networkMonitor)
         }
     }
 }
 
 #Preview {
     MainScreenView()
+        .environment(NetworkMonitor())
 }
