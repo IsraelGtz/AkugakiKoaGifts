@@ -9,6 +9,7 @@ import KoaGiftsStorage
 import SwiftUI
 
 struct AkugakiKoaView: View {
+    @Environment(\.colorScheme) private var colorScheme
     @State private var viewModel = AkugakiKoaViewModel()
 
     var body: some View {
@@ -17,40 +18,17 @@ struct AkugakiKoaView: View {
                 .ignoresSafeArea()
             List {
                 mainImage
-                switch viewModel.definitionsState {
-                case .idle, .loading:
-                    ProgressView()
-                case let .loaded(definitions):
-                    AkugakiKoaDefinitionsView(definitions)
-                case let .error(error):
-                    VStack {
-                        Text("Error loading information")
-                        Text(error.localizedDescription)
-                    }
-                }
-
-                switch viewModel.videoSectionsState {
-                case .idle, .loading, .error:
-                    EmptyView()
-                case let .loaded(
-                    specialGuestAppearances,
-                    liveConcerts,
-                    covers
-                ):
-                    KoaVideoSectionsView(
-                        specialGuestAppearances: specialGuestAppearances,
-                        liveConcerts: liveConcerts,
-                        covers: covers
-                    ).id(1)
-                }
+                definitionsSection
+                videosSection
             }
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
-            .listRowSpacing(0)
             .navigationTitle("↜ Who is Akugaki Koa? ↝")
             .navigationBarTitleDisplayMode(.large)
-            .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
-            .toolbarBackground(.ultraThinMaterial, for: .tabBar)
+            .if(colorScheme == .light, transform: { view in
+                view
+                    .toolbarBackgroundVisibility(.visible, for: .tabBar)
+            })
         }
     }
 
@@ -67,6 +45,31 @@ struct AkugakiKoaView: View {
             .listRowBackground(Color.clear)
             .padding(.top, 8)
             .padding(.bottom, 12)
+    }
+
+    @ViewBuilder
+    private var definitionsSection: some View {
+        switch viewModel.definitionsState {
+        case .idle, .loading:
+            ProgressView()
+        case let .loaded(definitions):
+            AkugakiKoaDefinitionsView(definitions)
+        case let .error(error):
+            VStack {
+                Text("Error loading information")
+                Text(error.localizedDescription)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var videosSection: some View {
+        switch viewModel.videoSectionsState {
+        case .idle, .loading, .error:
+            EmptyView()
+        case let .loaded(sections):
+            KoaVideoSectionsView(sections: sections)
+        }
     }
 }
 

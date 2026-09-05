@@ -10,7 +10,8 @@ import SwiftUI
 
 struct GiftsView: View {
     @State private var viewModel = GiftsViewModel()
-    @State private var selectedLetter: Letter? = nil
+    @State private var selectedPhysicalLetter: PhysicalLetter? = nil
+    @State private var selectedAudioLetter: AudioLetter? = nil
     @State private var selectedASMR: ASMR? = nil
     @Namespace private var zoomNamespace
 
@@ -28,12 +29,17 @@ struct GiftsView: View {
     @ViewBuilder
     private var giftsList: some View {
         List {
-            lettersSection
+            physicalLettersSection
+            audioLettersSection
             asmrsSection
         }
-        .fullScreenCover(item: $selectedLetter, content: { letter in
-            LetterView(letter: letter)
-                .navigationTransition(.zoom(sourceID: letter.id, in: zoomNamespace))
+        .fullScreenCover(item: $selectedPhysicalLetter, content: { physicalLetter in
+            PDFViewerView(fileName: physicalLetter.fileName)
+                .navigationTransition(.zoom(sourceID: physicalLetter.id, in: zoomNamespace))
+        })
+        .fullScreenCover(item: $selectedAudioLetter, content: { audioLetter in
+            LetterView(letter: audioLetter)
+                .navigationTransition(.zoom(sourceID: audioLetter.id, in: zoomNamespace))
         })
         .fullScreenCover(item: $selectedASMR, content: { asmr in
             ASMRView(asmr: asmr)
@@ -47,17 +53,34 @@ struct GiftsView: View {
     }
 
     @ViewBuilder
-    private var lettersSection: some View {
+    private var physicalLettersSection: some View {
         Section {
-            ForEach(viewModel.letters) { letter in
-                LetterCellView(
-                    selectedLetter: $selectedLetter,
-                    letter: letter
+            ForEach(viewModel.physicalLetters) { physicalLetter in
+                PhysicalLetterCellView(
+                    selectedLetter: $selectedPhysicalLetter,
+                    letter: physicalLetter
                 )
-                .matchedTransitionSource(id: letter.id, in: zoomNamespace)
+                .matchedTransitionSource(id: physicalLetter.id, in: zoomNamespace)
             }
         } header: {
             Text("Letters")
+                .font(.system(.headline))
+        }
+        .listSectionSeparator(.hidden)
+    }
+
+    @ViewBuilder
+    private var audioLettersSection: some View {
+        Section {
+            ForEach(viewModel.audioLetters) { audioLetter in
+                LetterCellView(
+                    selectedLetter: $selectedAudioLetter,
+                    letter: audioLetter
+                )
+                .matchedTransitionSource(id: audioLetter.id, in: zoomNamespace)
+            }
+        } header: {
+            Text("Audio Letters")
                 .font(.system(.headline))
         }
         .listSectionSeparator(.hidden)

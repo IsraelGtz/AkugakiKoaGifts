@@ -20,7 +20,8 @@ enum LetterViewModelState {
 class GiftsViewModel {
     private let storage = KoaGiftsStorage.shared
     var state: LetterViewModelState = .idle
-    var letters: [Letter] = []
+    var audioLetters: [AudioLetter] = []
+    var physicalLetters: [PhysicalLetter] = []
     var asmrs: [ASMR] = []
 
     init() {
@@ -29,17 +30,26 @@ class GiftsViewModel {
 
     private func loadData() {
         state = .loading
-        fetchLetters()
+        fetchPhysicalLetters()
+        fetchAudioLetters()
         fetchASMRs()
         state = .didLoad
     }
 
-    private func fetchLetters() {
+    private func fetchPhysicalLetters() {
         do {
-            let letters = try storage.fetchLetters()
-            self.letters = letters
+            let physicalLetters = try storage.fetchPhysicalLetters()
+            self.physicalLetters = physicalLetters
         } catch {
-            print(error)
+            state = .error(error)
+        }
+    }
+
+    private func fetchAudioLetters() {
+        do {
+            let audioLetters = try storage.fetchAudioLetters()
+            self.audioLetters = audioLetters
+        } catch {
             state = .error(error)
         }
     }
@@ -49,7 +59,6 @@ class GiftsViewModel {
             let asmrs = try storage.fetchASMRs()
             self.asmrs = asmrs
         } catch {
-            print(error)
             state = .error(error)
         }
     }

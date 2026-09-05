@@ -17,7 +17,7 @@ struct LetterView: View {
         isHalfwayVisible ? Color.blue.opacity(0.2) : Color.clear
     }
 
-    init(letter: Letter) {
+    init(letter: AudioLetter) {
         viewModel = LetterViewModel(letter: letter)
     }
 

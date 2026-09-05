@@ -10,7 +10,7 @@ import SwiftUI
 
 @Observable
 class LetterViewModel {
-    private let letter: Letter
+    private let letter: AudioLetter
 
     var title: String {
         letter.title
@@ -39,7 +39,7 @@ class LetterViewModel {
         }
     }
 
-    init(letter: Letter) {
+    init(letter: AudioLetter) {
         self.letter = letter
     }
 }

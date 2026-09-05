@@ -1,26 +1,21 @@
 //
-//  LetterCellView.swift
+//  PhysicalLetterCellView.swift
 //  AkugakiKoaGifts
 //
-//  Created by Israel Gutiérrez Castillo on 19.7.2026.
+//  Created by Israel Gutiérrez Castillo on 4.9.2026.
 //
 
 import AudioPlayer
 import KoaGiftsStorage
 import SwiftUI
 
-struct LetterCellView: View {
-    @State private var size: CGSize = .zero
-    @Binding var selectedLetter: AudioLetter?
-    let letter: AudioLetter
-
-    private var shouldShowAudioIcon: Bool {
-        letter.audioName != nil
-    }
+struct PhysicalLetterCellView: View {
+    @Binding private var selectedLetter: PhysicalLetter?
+    private let letter: PhysicalLetter
 
     init(
-        selectedLetter: Binding<AudioLetter?>,
-        letter: AudioLetter
+        selectedLetter: Binding<PhysicalLetter?>,
+        letter: PhysicalLetter
     ) {
         _selectedLetter = selectedLetter
         self.letter = letter
@@ -41,7 +36,7 @@ struct LetterCellView: View {
     private var cellBody: some View {
         ZStack {
             HStack(alignment: .center) {
-                Text(letter.name)
+                Text(letter.author)
                     .frame(alignment: .leading)
                     .allowsTightening(true)
                     .titleCellStyle(
@@ -51,21 +46,6 @@ struct LetterCellView: View {
                     .padding(.vertical)
                 Spacer()
                 backgroundImage
-            }
-            if shouldShowAudioIcon {
-                VStack {
-                    HStack(alignment: .top) {
-                        Spacer()
-                        Image(systemName: "waveform")
-                            .symbolEffect(.breathe.pulse.byLayer, options: .nonRepeating)
-                            .font(.system(size: 25, weight: .semibold))
-                            .foregroundStyle(Color.koaCyan)
-                            .padding(.top)
-                            .padding(.trailing, 8)
-                    }
-                    Spacer()
-                }
-                .background(.clear)
             }
         }
         .frame(height: 110)
@@ -85,8 +65,4 @@ struct LetterCellView: View {
         .frame(width: 135, height: 135)
         .padding(.trailing)
     }
-}
-
-#Preview {
-    GiftsView()
 }
