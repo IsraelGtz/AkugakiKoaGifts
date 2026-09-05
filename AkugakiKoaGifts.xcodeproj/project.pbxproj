@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7F2548323045784300ECE16E /* KoaneKoanikisLettersStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 7FA9A5303001D16300DCA780 /* KoaneKoanikisLettersStorage */; };
 		7F55F6E0304542F200182FAF /* KoaGiftsStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 7F55F6DF304542F200182FAF /* KoaGiftsStorage */; };
 		7F5846DB2FF8C4ED00BF9F6E /* AudioPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 7F5846DA2FF8C4ED00BF9F6E /* AudioPlayer */; };
 /* End PBXBuildFile section */
@@ -58,7 +57,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7F2548323045784300ECE16E /* KoaneKoanikisLettersStorage in Frameworks */,
 				7F5846DB2FF8C4ED00BF9F6E /* AudioPlayer in Frameworks */,
 				7F55F6E0304542F200182FAF /* KoaGiftsStorage in Frameworks */,
 			);
@@ -123,7 +121,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				7FA9A52F3001D15700DCA780 /* PBXTargetDependency */,
+				7F919C45304BD10400B51915 /* PBXTargetDependency */,
 				7F5846D82FF8C4D800BF9F6E /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
@@ -132,7 +130,6 @@
 			name = AkugakiKoaGifts;
 			packageProductDependencies = (
 				7F5846DA2FF8C4ED00BF9F6E /* AudioPlayer */,
-				7FA9A5303001D16300DCA780 /* KoaneKoanikisLettersStorage */,
 				7F55F6DF304542F200182FAF /* KoaGiftsStorage */,
 			);
 			productName = AkugakiKoaGifts;
@@ -219,7 +216,6 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				7F5846D62FF8C4C300BF9F6E /* XCLocalSwiftPackageReference "../AudioPlayer" */,
-				7FA9A52D3001D14900DCA780 /* XCLocalSwiftPackageReference "../KoaneKoanikisLettersStorage" */,
 				7F55F6DE304542DD00182FAF /* XCLocalSwiftPackageReference "../KoaGiftsStorage" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -287,6 +283,10 @@
 			isa = PBXTargetDependency;
 			productRef = 7F5846D72FF8C4D800BF9F6E /* AudioPlayer */;
 		};
+		7F919C45304BD10400B51915 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 7F919C44304BD10400B51915 /* KoaGiftsStorage */;
+		};
 		7F9338632FF89B9900809E0F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 7F9338532FF89B9800809E0F /* AkugakiKoaGifts */;
@@ -296,10 +296,6 @@
 			isa = PBXTargetDependency;
 			target = 7F9338532FF89B9800809E0F /* AkugakiKoaGifts */;
 			targetProxy = 7F93386C2FF89B9900809E0F /* PBXContainerItemProxy */;
-		};
-		7FA9A52F3001D15700DCA780 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = 7FA9A52E3001D15700DCA780 /* KoaneKoanikisLettersStorage */;
 		};
 /* End PBXTargetDependency section */
 
@@ -627,10 +623,6 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../AudioPlayer;
 		};
-		7FA9A52D3001D14900DCA780 /* XCLocalSwiftPackageReference "../KoaneKoanikisLettersStorage" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../KoaneKoanikisLettersStorage;
-		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -649,15 +641,10 @@
 			package = 7F5846D62FF8C4C300BF9F6E /* XCLocalSwiftPackageReference "../AudioPlayer" */;
 			productName = AudioPlayer;
 		};
-		7FA9A52E3001D15700DCA780 /* KoaneKoanikisLettersStorage */ = {
+		7F919C44304BD10400B51915 /* KoaGiftsStorage */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7FA9A52D3001D14900DCA780 /* XCLocalSwiftPackageReference "../KoaneKoanikisLettersStorage" */;
-			productName = KoaneKoanikisLettersStorage;
-		};
-		7FA9A5303001D16300DCA780 /* KoaneKoanikisLettersStorage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7FA9A52D3001D14900DCA780 /* XCLocalSwiftPackageReference "../KoaneKoanikisLettersStorage" */;
-			productName = KoaneKoanikisLettersStorage;
+			package = 7F55F6DE304542DD00182FAF /* XCLocalSwiftPackageReference "../KoaGiftsStorage" */;
+			productName = KoaGiftsStorage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
