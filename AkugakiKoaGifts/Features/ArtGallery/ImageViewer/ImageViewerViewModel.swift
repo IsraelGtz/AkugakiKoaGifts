@@ -8,13 +8,11 @@
 import Photos
 import SwiftUI
 
-@MainActor
+@MainActor @Observable
 class ImageViewerViewModel {
     private let saver: ImageSaver
 
-    var uncachedImages: [UIImage] {
-        ImageBuilder.imageNames.map { loadUncachedFromCatalog(name: $0) }.compactMap { $0 }
-    }
+    var images: [IdentifiableImageResource] = []
 
     init() {
         saver = .init()
@@ -36,11 +34,67 @@ class ImageViewerViewModel {
         else {
             return
         }
-        saver.writeToPhotoAlbum(image: UIImage(resource: image.resource))
+        saver.writeToPhotoAlbum(image: image.uiimage)
     }
 
-    func loadUncachedFromCatalog(name: String) -> UIImage? {
-        guard let asset = NSDataAsset(name: name) else { return nil }
-        return UIImage(data: asset.data)
+    func processImages(screenScale: CGFloat) async {
+        let targetSize = CGSize(width: 100, height: 100)
+
+        // 1. Initiate the background parallel thread pool
+        let downscaledImages = await withTaskGroup(
+            of: IdentifiableImageResource?.self,
+            returning: [IdentifiableImageResource].self
+        ) { taskGroup in
+
+            for imageName in ImageBuilder.imageNames {
+                taskGroup.addTask {
+                    self.downsampleAssetCatalogJPEG(
+                        named: imageName,
+                        to: targetSize,
+                        scale: screenScale
+                    )
+                }
+            }
+
+            var completedImages = [IdentifiableImageResource]()
+            for await downscaledImage in taskGroup {
+                if let downscaledImage {
+                    completedImages.append(downscaledImage)
+                }
+            }
+            return completedImages
+        }
+        withAnimation {
+            self.images = downscaledImages
+        }
+    }
+
+    private nonisolated func downsampleAssetCatalogJPEG(
+        named name: String,
+        to pointSize: CGSize,
+        scale: CGFloat
+    ) -> IdentifiableImageResource? {
+        guard
+            let uiImage = UIImage(named: name),
+            let imageData = uiImage.jpegData(compressionQuality: 1.0)
+        else {
+            return nil
+        }
+
+        // Disable internal global system caching to isolate memory per background thread
+        let imageOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let imageSource = CGImageSourceCreateWithData(imageData as CFData, imageOptions) else { return nil }
+
+        let maxDimension = max(pointSize.width, pointSize.height) * scale
+        let downsampleOptions = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceShouldCacheImmediately: true, // Forces extraction *now* in the background
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceThumbnailMaxPixelSize: maxDimension,
+        ] as CFDictionary
+
+        guard let downsampledCGImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) else { return nil }
+        let uiimage = UIImage(cgImage: downsampledCGImage, scale: scale, orientation: .up)
+        return IdentifiableImageResource(uiimage: uiimage, name: name)
     }
 }

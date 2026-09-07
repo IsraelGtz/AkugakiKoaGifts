@@ -40,7 +40,7 @@ struct ImageViewer: View {
 
     @ViewBuilder
     private func buildImageWith(proxy: GeometryProxy) -> some View {
-        Image(image.resource)
+        Image(image.name)
             .resizable()
             .scaledToFit()
             .aspectRatio(contentMode: .fit)

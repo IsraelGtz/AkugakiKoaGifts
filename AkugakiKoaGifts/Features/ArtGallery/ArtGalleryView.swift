@@ -13,7 +13,7 @@ struct ArtGalleryView: View {
     @State private var selectedImage: IdentifiableImageResource? = nil
     @State private var selectedGif: String? = nil
 
-    private let viewModel = ImageViewerViewModel()
+    @State var viewModel = ImageViewerViewModel()
     private let gifNames: [String] = ["koaGif", "chaosInSmallDoses720"]
 
     private let gridItemWidth = 100.0
@@ -41,6 +41,9 @@ struct ArtGalleryView: View {
                     .compositingGroup()
             }
         }
+        .task {
+            await viewModel.processImages(screenScale: UIScreen.main.scale)
+        }
         .navigationTitle("Gallery")
         .navigationBarTitleDisplayMode(.large)
     }
@@ -48,25 +51,19 @@ struct ArtGalleryView: View {
     @ViewBuilder
     private var drawsSection: some View {
         Section {
-            LazyVGrid(columns: columns, spacing: 4) {
-                ForEach(ImageBuilder.imageResources) { image in
-                    let isSelected = selectedImage?.id == image.id
-                    Image(image.resource)
-                        .genericStyle(
-                            scaleEffect: 1,
-                            applyGradient: false
-                        )
-                        .opacity(isSelected ? 0 : 1)
-                        .matchedGeometryEffect(
-                            id: image.id,
-                            in: galleryNamespace,
-                            isSource: selectedImage != nil ? false : true
-                        )
-                        .onTapGesture {
-                            withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
-                                selectedImage = image
-                            }
-                        }
+            if !viewModel.images.isEmpty {
+                LazyVGrid(columns: columns, spacing: 4) {
+                    ForEach(viewModel.images) { image in
+                        buildDrawCell(with: image)
+                    }
+                }
+            } else {
+                VStack {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
                 }
             }
         } header: {
@@ -75,6 +72,15 @@ struct ArtGalleryView: View {
         }
         .listRowSeparator(.hidden)
         .listSectionSeparator(.hidden)
+    }
+
+    @ViewBuilder
+    private func buildDrawCell(with image: IdentifiableImageResource) -> some View {
+        DrawCellView(
+            imageData: image,
+            namespace: galleryNamespace,
+            selectedImage: $selectedImage
+        )
     }
 
     @ViewBuilder
@@ -110,7 +116,7 @@ struct ArtGalleryView: View {
 
     @ViewBuilder
     private func zoomableImage(with image: IdentifiableImageResource) -> some View {
-        Image(image.resource)
+        Image(image.name)
             .resizable()
             .scaledToFit()
             .aspectRatio(contentMode: .fit)

@@ -78,12 +78,16 @@ struct LetterCellView: View {
 
     @ViewBuilder
     private var backgroundImage: some View {
-        ImageBuilder.getRandomImage(
-            scaleEffect: 1.15,
-            gradientEndRadius: 63
-        )
-        .frame(width: 135, height: 135)
-        .padding(.trailing)
+        Image(ImageBuilder.imageNames.randomElement() ?? "art_1")
+            .scaleEffect(1.5)
+            .frame(width: 135, height: 135)
+            .padding(.trailing)
+//        ImageBuilder.getRandomImage(
+//            scaleEffect: 1.15,
+//            gradientEndRadius: 63
+//        )
+//        .frame(width: 135, height: 135)
+//        .padding(.trailing)
     }
 }
 
