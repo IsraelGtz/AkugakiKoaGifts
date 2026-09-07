@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct DrawCellView: View {
-    let imageData: IdentifiableImageResource
+    let imageData: IdentifiableUIImage
     let namespace: Namespace.ID
-    @Binding var selectedImage: IdentifiableImageResource?
+    @Binding var selectedImage: IdentifiableUIImage?
 
     var body: some View {
         let isSelected = selectedImage?.id == imageData.id

@@ -45,7 +45,11 @@ struct PhysicalLetterCellView: View {
                     )
                     .padding(.vertical)
                 Spacer()
-                backgroundImage
+            }
+            HStack {
+                Spacer()
+                RandomBackgroundImageView(imageName: ImageBuilder.randomImageName)
+                    .id(1)
             }
         }
         .frame(height: 110)
@@ -55,19 +59,8 @@ struct PhysicalLetterCellView: View {
             in: RoundedRectangle(cornerRadius: 20)
         )
     }
+}
 
-    @ViewBuilder
-    private var backgroundImage: some View {
-        Image(ImageBuilder.imageNames.randomElement() ?? "art_1")
-            .scaleEffect(1.5)
-            .frame(width: 135, height: 135)
-            .padding(.trailing)
-
-//        ImageBuilder.getRandomImage(
-//            scaleEffect: 1.15,
-//            gradientEndRadius: 63
-//        )
-//        .frame(width: 135, height: 135)
-//        .padding(.trailing)
-    }
+#Preview {
+    GiftsView()
 }

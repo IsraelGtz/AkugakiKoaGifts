@@ -12,7 +12,7 @@ import SwiftUI
 class ImageViewerViewModel {
     private let saver: ImageSaver
 
-    var images: [IdentifiableImageResource] = []
+    var images: [IdentifiableUIImage] = []
 
     init() {
         saver = .init()
@@ -28,7 +28,7 @@ class ImageViewerViewModel {
         saver.save(gif: name)
     }
 
-    func save(image: IdentifiableImageResource?) {
+    func save(image: IdentifiableUIImage?) {
         guard
             let image
         else {
@@ -39,16 +39,13 @@ class ImageViewerViewModel {
 
     func processImages(screenScale: CGFloat) async {
         let targetSize = CGSize(width: 100, height: 100)
-
-        // 1. Initiate the background parallel thread pool
         let downscaledImages = await withTaskGroup(
-            of: IdentifiableImageResource?.self,
-            returning: [IdentifiableImageResource].self
+            of: IdentifiableUIImage?.self,
+            returning: [IdentifiableUIImage].self
         ) { taskGroup in
-
             for imageName in ImageBuilder.imageNames {
                 taskGroup.addTask {
-                    self.downsampleAssetCatalogJPEG(
+                    await ImageBuilder.downsampleAssetCatalogJPEG(
                         named: imageName,
                         to: targetSize,
                         scale: screenScale
@@ -56,7 +53,7 @@ class ImageViewerViewModel {
                 }
             }
 
-            var completedImages = [IdentifiableImageResource]()
+            var completedImages = [IdentifiableUIImage]()
             for await downscaledImage in taskGroup {
                 if let downscaledImage {
                     completedImages.append(downscaledImage)
@@ -64,8 +61,10 @@ class ImageViewerViewModel {
             }
             return completedImages
         }
-        withAnimation {
-            self.images = downscaledImages
+        Task { @MainActor in
+            withAnimation {
+                self.images = downscaledImages
+            }
         }
     }
 
@@ -73,7 +72,7 @@ class ImageViewerViewModel {
         named name: String,
         to pointSize: CGSize,
         scale: CGFloat
-    ) -> IdentifiableImageResource? {
+    ) -> IdentifiableUIImage? {
         guard
             let uiImage = UIImage(named: name),
             let imageData = uiImage.jpegData(compressionQuality: 1.0)
@@ -88,13 +87,13 @@ class ImageViewerViewModel {
         let maxDimension = max(pointSize.width, pointSize.height) * scale
         let downsampleOptions = [
             kCGImageSourceCreateThumbnailFromImageAlways: true,
-            kCGImageSourceShouldCacheImmediately: true, // Forces extraction *now* in the background
+            kCGImageSourceShouldCacheImmediately: true,
             kCGImageSourceCreateThumbnailWithTransform: true,
             kCGImageSourceThumbnailMaxPixelSize: maxDimension,
         ] as CFDictionary
 
         guard let downsampledCGImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) else { return nil }
         let uiimage = UIImage(cgImage: downsampledCGImage, scale: scale, orientation: .up)
-        return IdentifiableImageResource(uiimage: uiimage, name: name)
+        return IdentifiableUIImage(uiimage: uiimage, name: name)
     }
 }

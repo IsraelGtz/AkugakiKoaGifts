@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct ArtGalleryView: View {
+    @Environment(\.displayScale) var scale
     @Namespace private var zoomNamespace
     @Namespace private var galleryNamespace
-    @State private var selectedImage: IdentifiableImageResource? = nil
+    @State private var selectedImage: IdentifiableUIImage? = nil
     @State private var selectedGif: String? = nil
 
     @State var viewModel = ImageViewerViewModel()
@@ -41,9 +42,6 @@ struct ArtGalleryView: View {
                     .compositingGroup()
             }
         }
-        .task {
-            await viewModel.processImages(screenScale: UIScreen.main.scale)
-        }
         .navigationTitle("Gallery")
         .navigationBarTitleDisplayMode(.large)
     }
@@ -57,11 +55,17 @@ struct ArtGalleryView: View {
                         buildDrawCell(with: image)
                     }
                 }
+                .transition(.opacity.combined(with: .blurReplace))
             } else {
                 VStack {
                     HStack {
                         Spacer()
                         ProgressView()
+                            .task(id: 1, priority: .background) {
+                                Task.detached(priority: .userInitiated) {
+                                    await viewModel.processImages(screenScale: scale)
+                                }
+                            }
                         Spacer()
                     }
                 }
@@ -75,7 +79,7 @@ struct ArtGalleryView: View {
     }
 
     @ViewBuilder
-    private func buildDrawCell(with image: IdentifiableImageResource) -> some View {
+    private func buildDrawCell(with image: IdentifiableUIImage) -> some View {
         DrawCellView(
             imageData: image,
             namespace: galleryNamespace,
@@ -115,7 +119,7 @@ struct ArtGalleryView: View {
     }
 
     @ViewBuilder
-    private func zoomableImage(with image: IdentifiableImageResource) -> some View {
+    private func zoomableImage(with image: IdentifiableUIImage) -> some View {
         Image(image.name)
             .resizable()
             .scaledToFit()

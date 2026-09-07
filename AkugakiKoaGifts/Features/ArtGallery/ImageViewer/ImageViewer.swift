@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ImageViewer: View {
-    let image: IdentifiableImageResource
+    let image: IdentifiableUIImage
     let nameSpace: Namespace.ID
-    @Binding var selectedImage: IdentifiableImageResource?
+    @Binding var selectedImage: IdentifiableUIImage?
 
     @GestureState private var currentScale: CGFloat = 1
     @GestureState private var currentOffset: CGSize = .zero

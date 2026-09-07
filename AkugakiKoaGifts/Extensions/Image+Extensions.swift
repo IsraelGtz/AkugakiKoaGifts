@@ -16,8 +16,8 @@ extension Image {
         gradientEndRadius: CGFloat = 100
     ) -> some View {
         resizable()
-            .scaledToFit()
-            .aspectRatio(contentMode: .fit)
+            .scaledToFill()
+            .aspectRatio(contentMode: .fill)
             .scaleEffect(scaleEffect)
             .if(applyGradient, transform: { view in
                 view

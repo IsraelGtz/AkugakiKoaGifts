@@ -1,5 +1,5 @@
 //
-//  LetterCellView.swift
+//  AudioLetterCellView.swift
 //  AkugakiKoaGifts
 //
 //  Created by Israel Gutiérrez Castillo on 19.7.2026.
@@ -9,7 +9,7 @@ import AudioPlayer
 import KoaGiftsStorage
 import SwiftUI
 
-struct LetterCellView: View {
+struct AudioLetterCellView: View {
     @State private var size: CGSize = .zero
     @Binding var selectedLetter: AudioLetter?
     let letter: AudioLetter
@@ -50,7 +50,11 @@ struct LetterCellView: View {
                     )
                     .padding(.vertical)
                 Spacer()
-                backgroundImage
+            }
+            HStack {
+                Spacer()
+                RandomBackgroundImageView(imageName: ImageBuilder.randomImageName)
+                    .id(1)
             }
             if shouldShowAudioIcon {
                 VStack {
@@ -74,20 +78,6 @@ struct LetterCellView: View {
             Color.sliderTrack.gradient,
             in: RoundedRectangle(cornerRadius: 20)
         )
-    }
-
-    @ViewBuilder
-    private var backgroundImage: some View {
-        Image(ImageBuilder.imageNames.randomElement() ?? "art_1")
-            .scaleEffect(1.5)
-            .frame(width: 135, height: 135)
-            .padding(.trailing)
-//        ImageBuilder.getRandomImage(
-//            scaleEffect: 1.15,
-//            gradientEndRadius: 63
-//        )
-//        .frame(width: 135, height: 135)
-//        .padding(.trailing)
     }
 }
 

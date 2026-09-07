@@ -72,7 +72,7 @@ struct GiftsView: View {
     private var audioLettersSection: some View {
         Section {
             ForEach(viewModel.audioLetters) { audioLetter in
-                LetterCellView(
+                AudioLetterCellView(
                     selectedLetter: $selectedAudioLetter,
                     letter: audioLetter
                 )
