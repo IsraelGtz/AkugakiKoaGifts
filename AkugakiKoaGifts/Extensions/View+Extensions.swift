@@ -28,6 +28,12 @@ extension View {
             Styles.linearGradientAnimation()
         )
     }
+
+    func sectionHeaderStyle() -> some View {
+        font(.system(.headline, weight: .medium))
+            .frame(maxWidth: .infinity, alignment: .center)
+            .foregroundStyle(.letterFont)
+    }
 }
 
 extension View {

@@ -26,13 +26,12 @@ struct ArtGalleryView: View {
     var body: some View {
         ZStack {
             List {
-                LazyVGrid(columns: columns, spacing: 4) {
-                    drawsSection
-                    gifsSection
-                }
+                drawsSection
+                gifsSection
             }
             .ignoresSafeArea(.keyboard)
             .listStyle(.plain)
+
             if let selectedImage {
                 zoomableImage(with: selectedImage)
             }
@@ -49,57 +48,64 @@ struct ArtGalleryView: View {
     @ViewBuilder
     private var drawsSection: some View {
         Section {
-            ForEach(ImageBuilder.imageResources) { image in
-                let isSelected = selectedImage?.id == image.id
-                Image(image.resource)
-                    .genericStyle(
-                        scaleEffect: 1,
-                        applyGradient: false
-                    )
-                    .opacity(isSelected ? 0 : 1)
-                    .matchedGeometryEffect(
-                        id: image.id,
-                        in: galleryNamespace,
-                        isSource: selectedImage != nil ? false : true
-                    )
-                    .onTapGesture {
-                        withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
-                            selectedImage = image
+            LazyVGrid(columns: columns, spacing: 4) {
+                ForEach(ImageBuilder.imageResources) { image in
+                    let isSelected = selectedImage?.id == image.id
+                    Image(image.resource)
+                        .genericStyle(
+                            scaleEffect: 1,
+                            applyGradient: false
+                        )
+                        .opacity(isSelected ? 0 : 1)
+                        .matchedGeometryEffect(
+                            id: image.id,
+                            in: galleryNamespace,
+                            isSource: selectedImage != nil ? false : true
+                        )
+                        .onTapGesture {
+                            withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
+                                selectedImage = image
+                            }
                         }
-                    }
+                }
             }
         } header: {
             Text("Draws")
-                .titleCellStyle(style: .title2, color: .cyan)
+                .sectionHeaderStyle()
         }
+        .listRowSeparator(.hidden)
+        .listSectionSeparator(.hidden)
     }
 
     @ViewBuilder
     private var gifsSection: some View {
         Section {
-            ForEach(gifNames, id: \.self) { gif in
-                let isSelected = selectedGif == gif
-                LocalGIFViewer(name: gif)
-                    .aspectRatio(1, contentMode: .fit)
-                    .frame(minWidth: gridItemWidth)
-                    .contentShape(Rectangle())
-                    .opacity(isSelected ? 0 : 1)
-                    .matchedGeometryEffect(
-                        id: gif,
-                        in: galleryNamespace,
-                        isSource: selectedGif != nil ? false : true
-                    )
-                    .onTapGesture {
-                        withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
-                            selectedGif = gif
+            LazyVGrid(columns: columns, spacing: 4) {
+                ForEach(gifNames, id: \.self) { gif in
+                    let isSelected = selectedGif == gif
+                    LocalGIFViewer(name: gif)
+                        .aspectRatio(1, contentMode: .fit)
+                        .frame(minWidth: gridItemWidth)
+                        .contentShape(Rectangle())
+                        .opacity(isSelected ? 0 : 1)
+                        .matchedGeometryEffect(
+                            id: gif,
+                            in: galleryNamespace,
+                            isSource: selectedGif != nil ? false : true
+                        )
+                        .onTapGesture {
+                            withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
+                                selectedGif = gif
+                            }
                         }
-                    }
+                }
             }
         } header: {
             Text("Gifs")
-                .titleCellStyle(style: .title2, color: .cyan)
-                .padding(.top, 18)
+                .sectionHeaderStyle()
         }
+        .listRowSeparator(.hidden)
+        .listSectionSeparator(.hidden)
     }
 
     @ViewBuilder
@@ -140,4 +146,5 @@ struct ArtGalleryView: View {
 
 #Preview {
     MainScreenView()
+        .environment(NetworkMonitor())
 }

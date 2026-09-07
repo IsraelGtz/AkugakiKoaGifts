@@ -12,6 +12,10 @@ import SwiftUI
 class ImageViewerViewModel {
     private let saver: ImageSaver
 
+    var uncachedImages: [UIImage] {
+        ImageBuilder.imageNames.map { loadUncachedFromCatalog(name: $0) }.compactMap { $0 }
+    }
+
     init() {
         saver = .init()
         saver.successHandler = {
@@ -33,5 +37,10 @@ class ImageViewerViewModel {
             return
         }
         saver.writeToPhotoAlbum(image: UIImage(resource: image.resource))
+    }
+
+    func loadUncachedFromCatalog(name: String) -> UIImage? {
+        guard let asset = NSDataAsset(name: name) else { return nil }
+        return UIImage(data: asset.data)
     }
 }

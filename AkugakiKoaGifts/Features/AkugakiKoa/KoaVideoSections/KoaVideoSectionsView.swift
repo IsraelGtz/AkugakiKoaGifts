@@ -40,8 +40,7 @@ struct KoaVideoSectionsView: View {
             }
         } header: {
             Text(section.title)
-                .font(.system(.headline, weight: .medium))
-                .foregroundStyle(.letterFont)
+                .sectionHeaderStyle()
         }
     }
 }

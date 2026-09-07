@@ -44,7 +44,7 @@ struct AkugakiKoaView: View {
             .listRowSeparator(.hidden)
             .listRowBackground(Color.clear)
             .padding(.top, 8)
-            .padding(.bottom, 12)
+            .padding(.bottom)
     }
 
     @ViewBuilder
@@ -54,11 +54,13 @@ struct AkugakiKoaView: View {
             ProgressView()
         case let .loaded(definitions):
             AkugakiKoaDefinitionsView(definitions)
+                .padding(.bottom, 12)
         case let .error(error):
             VStack {
                 Text("Error loading information")
                 Text(error.localizedDescription)
             }
+            .listRowBackground(Color.clear)
         }
     }
 

@@ -21,25 +21,31 @@ struct WaterMeshBackground: View {
     }
 
     var body: some View {
-        // Restricted to 30 FPS to save battery and processing power
         TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { timeline in
             let time = timeline.date.timeIntervalSinceReferenceDate
 
-            // Keeps the movement localized and fluid
-            let xShift = Float(sin(time * 0.6) * 0.12)
-            let yShift = Float(cos(time * 0.5) * 0.12)
+            // Layering desynchronized prime frequencies breaks the predictable loop
+            // Center point offsets
+            let centerXShift = Float((sin(time * 0.43) * 0.10) + (cos(time * 0.17) * 0.08))
+            let centerYShift = Float((cos(time * 0.37) * 0.10) + (sin(time * 0.23) * 0.08))
+
+            // Middle Left point offsets
+            let leftYShift = Float((sin(time * 0.31) * 0.09) + (cos(time * 0.13) * 0.06))
+
+            // Middle Right point offsets
+            let rightYShift = Float((cos(time * 0.47) * 0.09) + (sin(time * 0.19) * 0.06))
 
             MeshGradient(
                 width: 3,
                 height: 3,
                 points: [
-                    // Top Row: Completely locked at the edges
+                    // Top Row: Locked
                     [0.0, 0.0], [0.5, 0.0], [1.0, 0.0],
 
-                    // Middle Row: Left/Right locked, Center floats fluidly
-                    [0.0, 0.5], [0.5 + xShift, 0.5 + yShift], [1.0, 0.5],
+                    // Middle Row: Complex pseudo-random tracks
+                    [0.0, 0.5 + leftYShift], [0.5 + centerXShift, 0.5 + centerYShift], [1.0, 0.5 + rightYShift],
 
-                    // Bottom Row: Completely locked at the edges
+                    // Bottom Row: Locked
                     [0.0, 1.0], [0.5, 1.0], [1.0, 1.0],
                 ],
                 colors: colors
@@ -50,5 +56,6 @@ struct WaterMeshBackground: View {
 }
 
 #Preview {
-    AkugakiKoaView()
+    MainScreenView()
+        .environment(NetworkMonitor())
 }

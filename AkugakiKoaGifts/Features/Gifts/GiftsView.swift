@@ -47,7 +47,6 @@ struct GiftsView: View {
         })
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
-        .listRowSpacing(12)
         .navigationTitle("Gifts")
         .navigationBarTitleDisplayMode(.large)
     }
@@ -64,7 +63,7 @@ struct GiftsView: View {
             }
         } header: {
             Text("Letters")
-                .font(.system(.headline))
+                .sectionHeaderStyle()
         }
         .listSectionSeparator(.hidden)
     }
@@ -81,7 +80,7 @@ struct GiftsView: View {
             }
         } header: {
             Text("Audio Letters")
-                .font(.system(.headline))
+                .sectionHeaderStyle()
         }
         .listSectionSeparator(.hidden)
     }
@@ -98,7 +97,7 @@ struct GiftsView: View {
             }
         } header: {
             Text("ASMRs")
-                .font(.system(.headline))
+                .sectionHeaderStyle()
         }
         .listSectionSeparator(.hidden)
     }
@@ -118,5 +117,6 @@ struct GiftsView: View {
 }
 
 #Preview {
-    GiftsView()
+    MainScreenView()
+        .environment(NetworkMonitor())
 }

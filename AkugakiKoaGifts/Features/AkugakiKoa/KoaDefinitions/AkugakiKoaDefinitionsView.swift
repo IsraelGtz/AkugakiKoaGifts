@@ -29,13 +29,18 @@ struct AkugakiKoaDefinitionsView: View {
         text: String,
         author: String?
     ) -> some View {
-        VStack(spacing: 8) {
-            Text(text)
-                .multilineTextAlignment(.leading)
-            if let author {
-                HStack {
-                    Spacer()
-                    Text(author)
+        VStack {
+            Group {
+                Text(text)
+                    .font(.system(.body, weight: .medium))
+                    .multilineTextAlignment(.leading)
+                    .padding(.bottom, 8)
+                if let author {
+                    HStack {
+                        Spacer()
+                        Text(author)
+                            .font(.system(.headline, weight: .bold))
+                    }
                 }
             }
         }
@@ -48,4 +53,9 @@ struct AkugakiKoaDefinitionsView: View {
         .listRowSeparator(.hidden)
         .listRowBackground(Color.clear)
     }
+}
+
+#Preview {
+    MainScreenView()
+        .environment(NetworkMonitor())
 }

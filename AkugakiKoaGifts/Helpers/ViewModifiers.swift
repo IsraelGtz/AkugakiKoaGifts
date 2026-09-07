@@ -43,7 +43,11 @@ enum Styles {
     struct linearGradientAnimation: ViewModifier {
         @State private var startPoint = UnitPoint(x: -1, y: 0)
         @State private var endPoint = UnitPoint(x: 0, y: 0)
-        let colors: [Color] = [.letterFont, .cyan, .blue, .purpleGradientAnimation]
+        private let colors: [Color]
+
+        init(_ colors: [Color] = [.letterFont, .cyan, .blue, .purpleGradientAnimation]) {
+            self.colors = colors
+        }
 
         func body(content: Content) -> some View {
             content
@@ -68,5 +72,6 @@ enum Styles {
 }
 
 #Preview {
-    GiftsView()
+    MainScreenView()
+        .environment(NetworkMonitor())
 }
