@@ -1,34 +1,30 @@
 //
-//  AudioLetterCellView.swift
+//  ASMRCellView.swift
 //  AkugakiKoaGifts
 //
-//  Created by Israel Gutiérrez Castillo on 19.7.2026.
+//  Created by Israel Gutiérrez Castillo on 7.9.2026.
 //
 
 import AudioPlayer
 import KoaGiftsStorage
 import SwiftUI
 
-struct AudioLetterCellView: View {
+struct ASMRCellView: View {
     @State private var size: CGSize = .zero
-    @Binding var selectedLetter: AudioLetter?
-    let letter: AudioLetter
-
-    private var shouldShowAudioIcon: Bool {
-        letter.audioName != nil
-    }
+    @Binding var selectedASMR: ASMR?
+    let asmr: ASMR
 
     init(
-        selectedLetter: Binding<AudioLetter?>,
-        letter: AudioLetter
+        selectedASMR: Binding<ASMR?>,
+        asmr: ASMR
     ) {
-        _selectedLetter = selectedLetter
-        self.letter = letter
+        _selectedASMR = selectedASMR
+        self.asmr = asmr
     }
 
     var body: some View {
         Button {
-            selectedLetter = letter
+            selectedASMR = asmr
         } label: {
             cellBody
         }
@@ -41,7 +37,7 @@ struct AudioLetterCellView: View {
     private var cellBody: some View {
         ZStack {
             HStack(alignment: .center) {
-                Text(letter.name)
+                Text(asmr.name)
                     .frame(alignment: .leading)
                     .allowsTightening(true)
                     .titleCellStyle(
@@ -56,22 +52,21 @@ struct AudioLetterCellView: View {
                 RandomBackgroundImageView(imageName: ImageBuilder.randomImageName)
                     .id(1)
             }
-            if shouldShowAudioIcon {
-                VStack {
-                    HStack(alignment: .top) {
-                        Spacer()
-                        Image(systemName: "waveform")
-                            .symbolEffect(.breathe.pulse.byLayer, options: .nonRepeating)
-                            .font(.system(size: 28, weight: .semibold))
-                            .foregroundStyle(Color.white)
-                            .padding(.top, 8)
-                            .padding(.trailing, 8)
-                    }
+            VStack {
+                HStack(alignment: .top) {
                     Spacer()
-                        .frame(height: 65)
+                    Image(systemName: "waveform")
+                        .symbolEffect(.breathe.pulse.byLayer, options: .nonRepeating)
+                        .font(.system(size: 24, weight: .semibold))
+                        .foregroundStyle(Color.white)
+                        .padding(.top, 8)
+                        .padding(.trailing, 8)
                 }
-                .background(.clear)
+                Spacer()
+                    .frame(height: 65)
             }
+            .background(.clear)
+            .zIndex(2)
         }
         .frame(height: 110)
         .clipped()

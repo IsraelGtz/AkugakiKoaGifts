@@ -15,7 +15,6 @@ struct ArtGalleryView: View {
     @State private var selectedGif: String? = nil
 
     @State var viewModel = ImageViewerViewModel()
-    private let gifNames: [String] = ["koaGif", "chaosInSmallDoses720"]
 
     private let gridItemWidth = 100.0
     private let columns: [GridItem]
@@ -28,6 +27,7 @@ struct ArtGalleryView: View {
         ZStack {
             List {
                 drawsSection
+                memesSection
                 gifsSection
             }
             .ignoresSafeArea(.keyboard)
@@ -49,10 +49,14 @@ struct ArtGalleryView: View {
     @ViewBuilder
     private var drawsSection: some View {
         Section {
-            if !viewModel.images.isEmpty {
+            if !viewModel.artImages.isEmpty {
                 LazyVGrid(columns: columns, spacing: 4) {
-                    ForEach(viewModel.images) { image in
-                        buildDrawCell(with: image)
+                    ForEach(viewModel.artImages) { image in
+                        DrawCellView(
+                            imageData: image,
+                            namespace: galleryNamespace,
+                            selectedImage: $selectedImage
+                        )
                     }
                 }
                 .transition(.opacity.combined(with: .blurReplace))
@@ -62,9 +66,7 @@ struct ArtGalleryView: View {
                         Spacer()
                         ProgressView()
                             .task(id: 1, priority: .background) {
-                                Task.detached(priority: .userInitiated) {
-                                    await viewModel.processImages(screenScale: scale)
-                                }
+                                await viewModel.processArtsImages(screenScale: scale)
                             }
                         Spacer()
                     }
@@ -79,19 +81,44 @@ struct ArtGalleryView: View {
     }
 
     @ViewBuilder
-    private func buildDrawCell(with image: IdentifiableUIImage) -> some View {
-        DrawCellView(
-            imageData: image,
-            namespace: galleryNamespace,
-            selectedImage: $selectedImage
-        )
+    private var memesSection: some View {
+        Section {
+            if !viewModel.memeImages.isEmpty {
+                LazyVGrid(columns: columns, spacing: 4) {
+                    ForEach(viewModel.memeImages) { image in
+                        DrawCellView(
+                            imageData: image,
+                            namespace: galleryNamespace,
+                            selectedImage: $selectedImage
+                        )
+                    }
+                }
+                .transition(.opacity.combined(with: .blurReplace))
+            } else {
+                VStack {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                            .task(id: 1, priority: .background) {
+                                await viewModel.processMemesImages(screenScale: scale)
+                            }
+                        Spacer()
+                    }
+                }
+            }
+        } header: {
+            Text("Memes")
+                .sectionHeaderStyle()
+        }
+        .listRowSeparator(.hidden)
+        .listSectionSeparator(.hidden)
     }
 
     @ViewBuilder
     private var gifsSection: some View {
         Section {
             LazyVGrid(columns: columns, spacing: 4) {
-                ForEach(gifNames, id: \.self) { gif in
+                ForEach(viewModel.gifNames, id: \.self) { gif in
                     let isSelected = selectedGif == gif
                     LocalGIFViewer(name: gif)
                         .aspectRatio(1, contentMode: .fit)

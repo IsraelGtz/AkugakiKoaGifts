@@ -89,11 +89,11 @@ struct GiftsView: View {
     private var asmrsSection: some View {
         Section {
             ForEach(viewModel.asmrs) { asmr in
-                Text(asmr.title)
-                    .matchedTransitionSource(id: asmr.id, in: zoomNamespace)
-                    .onTapGesture {
-                        selectedASMR = asmr
-                    }
+                ASMRCellView(
+                    selectedASMR: $selectedASMR,
+                    asmr: asmr
+                )
+                .matchedTransitionSource(id: asmr.id, in: zoomNamespace)
             }
         } header: {
             Text("ASMRs")

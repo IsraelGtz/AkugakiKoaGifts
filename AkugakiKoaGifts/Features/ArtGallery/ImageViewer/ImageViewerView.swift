@@ -1,5 +1,5 @@
 //
-//  ImageViewer.swift
+//  ImageViewerView.swift
 //  AkugakiKoaGifts
 //
 //  Created by Israel Gutiérrez Castillo on 3.8.2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ImageViewer: View {
+struct ImageViewerView: View {
     let image: IdentifiableUIImage
     let nameSpace: Namespace.ID
     @Binding var selectedImage: IdentifiableUIImage?

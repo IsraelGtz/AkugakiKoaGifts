@@ -28,7 +28,9 @@ struct MainScreenView: View {
             }
 
             Tab("Credits", systemImage: "person.3") {
-                Text("Credits")
+                NavigationStack {
+                    CreditsView()
+                }
             }
         }
     }

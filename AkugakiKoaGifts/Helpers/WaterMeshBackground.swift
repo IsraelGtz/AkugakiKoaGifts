@@ -24,7 +24,6 @@ struct WaterMeshBackground: View {
         TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { timeline in
             let time = timeline.date.timeIntervalSinceReferenceDate
 
-            // Layering desynchronized prime frequencies breaks the predictable loop
             // Center point offsets
             let centerXShift = Float((sin(time * 0.43) * 0.10) + (cos(time * 0.17) * 0.08))
             let centerYShift = Float((cos(time * 0.37) * 0.10) + (sin(time * 0.23) * 0.08))

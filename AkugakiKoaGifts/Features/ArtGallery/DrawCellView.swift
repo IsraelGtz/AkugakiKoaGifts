@@ -19,6 +19,8 @@ struct DrawCellView: View {
                 scaleEffect: 1,
                 applyGradient: false
             )
+            .scaledToFit()
+            .aspectRatio(contentMode: .fit)
             .opacity(isSelected ? 0 : 1)
             .matchedGeometryEffect(
                 id: imageData.id,

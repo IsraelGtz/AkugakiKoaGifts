@@ -5,14 +5,18 @@
 //  Created by Israel Gutiérrez Castillo on 17.8.2026.
 //
 
+import KoaGiftsStorage
 import Photos
 import SwiftUI
 
 @MainActor @Observable
 class ImageViewerViewModel {
+    var artImages: [IdentifiableUIImage] = []
+    var memeImages: [IdentifiableUIImage] = []
+    var gifNames: [String] = []
+    var memeNames: [String] = []
+    private var imageNames: [String] = []
     private let saver: ImageSaver
-
-    var images: [IdentifiableUIImage] = []
 
     init() {
         saver = .init()
@@ -22,6 +26,12 @@ class ImageViewerViewModel {
         saver.errorHandler = { error in
             print(error.localizedDescription)
         }
+        gifNames = getNamesOfElementsInSectionWith(title: "Gifs")
+        memeNames = getNamesOfElementsInSectionWith(title: "Memes")
+        imageNames = getNamesOfElementsInSectionWith(title: "Arts")
+        print("images: \(imageNames)")
+        print("memes: \(memeNames)")
+        print("gifs: \(gifNames)")
     }
 
     func save(gif name: String) {
@@ -37,13 +47,40 @@ class ImageViewerViewModel {
         saver.writeToPhotoAlbum(image: image.uiimage)
     }
 
-    func processImages(screenScale: CGFloat) async {
+    func processArtsImages(screenScale: CGFloat) async {
+        Task.detached(
+            name: "arts",
+            priority: .userInitiated
+        ) {
+            let arts = await self.processImages(names: self.imageNames, screenScale: screenScale)
+            Task { @MainActor in
+                self.artImages = arts
+            }
+        }
+    }
+
+    func processMemesImages(screenScale: CGFloat) async {
+        Task.detached(
+            name: "memes",
+            priority: .userInitiated
+        ) {
+            let memes = await self.processImages(names: self.memeNames, screenScale: screenScale)
+            Task { @MainActor in
+                self.memeImages = memes
+            }
+        }
+    }
+
+    private func processImages(
+        names: [String],
+        screenScale: CGFloat
+    ) async -> [IdentifiableUIImage] {
         let targetSize = CGSize(width: 100, height: 100)
         let downscaledImages = await withTaskGroup(
             of: IdentifiableUIImage?.self,
             returning: [IdentifiableUIImage].self
         ) { taskGroup in
-            for imageName in ImageBuilder.imageNames {
+            for imageName in names {
                 taskGroup.addTask {
                     await ImageBuilder.downsampleAssetCatalogJPEG(
                         named: imageName,
@@ -61,39 +98,17 @@ class ImageViewerViewModel {
             }
             return completedImages
         }
-        Task { @MainActor in
-            withAnimation {
-                self.images = downscaledImages
-            }
-        }
+        return downscaledImages
     }
 
-    private nonisolated func downsampleAssetCatalogJPEG(
-        named name: String,
-        to pointSize: CGSize,
-        scale: CGFloat
-    ) -> IdentifiableUIImage? {
-        guard
-            let uiImage = UIImage(named: name),
-            let imageData = uiImage.jpegData(compressionQuality: 1.0)
-        else {
-            return nil
+    private func getNamesOfElementsInSectionWith(title: String) -> [String] {
+        do {
+            let sections = try KoaGiftsStorage.shared.fetchGallerySections()
+            let names = sections.first(where: { $0.title == title })?.names ?? []
+            return names
+        } catch {
+            print(error)
+            return []
         }
-
-        // Disable internal global system caching to isolate memory per background thread
-        let imageOptions = [kCGImageSourceShouldCache: false] as CFDictionary
-        guard let imageSource = CGImageSourceCreateWithData(imageData as CFData, imageOptions) else { return nil }
-
-        let maxDimension = max(pointSize.width, pointSize.height) * scale
-        let downsampleOptions = [
-            kCGImageSourceCreateThumbnailFromImageAlways: true,
-            kCGImageSourceShouldCacheImmediately: true,
-            kCGImageSourceCreateThumbnailWithTransform: true,
-            kCGImageSourceThumbnailMaxPixelSize: maxDimension,
-        ] as CFDictionary
-
-        guard let downsampledCGImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) else { return nil }
-        let uiimage = UIImage(cgImage: downsampledCGImage, scale: scale, orientation: .up)
-        return IdentifiableUIImage(uiimage: uiimage, name: name)
     }
 }

@@ -20,7 +20,7 @@ struct RandomBackgroundImageView: View {
                     applyGradient: true,
                     gradientEndRadius: 100
                 )
-                .frame(width: 205, height: 205)
+                .frame(width: 200, height: 200)
                 .transition(.opacity.combined(with: .blurReplace))
         } else {
             ZStack {
