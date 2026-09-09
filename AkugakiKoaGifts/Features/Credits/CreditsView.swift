@@ -36,6 +36,7 @@ struct CreditsView: View {
         }
         .navigationTitle("Credits")
         .navigationBarTitleDisplayMode(.large)
+        .toolbarBackgroundVisibility(.visible, for: .tabBar)
     }
 
     @ViewBuilder
