@@ -9,22 +9,17 @@ import KoaGiftsStorage
 import SwiftUI
 
 struct KoaVideoSectionsView: View {
-    @Environment(NetworkMonitor.self) private var network
     let sections: [VideoSection]
 
     var body: some View {
-        if network.isConnected {
-            Group {
-                ForEach(sections) { videoSection in
-                    buildVideoSection(with: videoSection)
-                }
+        Group {
+            ForEach(sections) { videoSection in
+                buildVideoSection(with: videoSection)
             }
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
-            .listSectionSpacing(30)
-        } else {
-            EmptyView()
         }
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
+        .listSectionSpacing(30)
     }
 
     @ViewBuilder
