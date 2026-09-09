@@ -13,14 +13,14 @@ struct ArtGalleryView: View {
     @Namespace private var galleryNamespace
     @State private var selectedImage: IdentifiableUIImage? = nil
     @State private var selectedGif: String? = nil
-
-    @State var viewModel = ImageViewerViewModel()
+    @State private var showInfo: Bool = false
+    @State private var viewModel = ImageViewerViewModel()
 
     private let gridItemWidth = 100.0
     private let columns: [GridItem]
 
     init() {
-        columns = Array(repeating: GridItem(.adaptive(minimum: gridItemWidth)), count: 3)
+        columns = Array(repeating: GridItem(.flexible(minimum: 100, maximum: 325)), count: 3)
     }
 
     var body: some View {
@@ -44,6 +44,9 @@ struct ArtGalleryView: View {
         }
         .navigationTitle("Gallery")
         .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            infoButton
+        }
     }
 
     @ViewBuilder
@@ -178,6 +181,25 @@ struct ArtGalleryView: View {
             }), dismissAction: {
                 selectedGif = nil
             })
+    }
+
+    @ToolbarContentBuilder
+    private var infoButton: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            Button {
+                showInfo.toggle()
+            } label: {
+                Image(systemName: "info.circle")
+                    .font(.system(.title3))
+                    .tint(.blue)
+            }
+            .popover(isPresented: $showInfo) {
+                Text("Expand an image, then long-press it to save.")
+                    .padding()
+                    .font(.footnote)
+                    .presentationCompactAdaptation(.popover)
+            }
+        }
     }
 }
 

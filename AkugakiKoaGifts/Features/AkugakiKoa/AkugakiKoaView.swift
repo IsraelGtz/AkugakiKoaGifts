@@ -11,6 +11,7 @@ import SwiftUI
 struct AkugakiKoaView: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var viewModel = AkugakiKoaViewModel()
+    @State private var imageWidth: CGFloat = 0
 
     var body: some View {
         ZStack {
@@ -30,21 +31,31 @@ struct AkugakiKoaView: View {
                     .toolbarBackgroundVisibility(.visible, for: .tabBar)
             })
         }
+        .onGeometryChange(for: CGFloat.self) { proxy in
+            proxy.size.width
+        } action: { newValue in
+            imageWidth = newValue * 0.8
+        }
     }
 
     @ViewBuilder
     private var mainImage: some View {
-        Image(.koaMain1)
-            .genericStyle(
-                gradientColors: .init(colors: [.black, .black, .black, .black, .black, .clear]),
-                gradientStartRadius: 0,
-                gradientEndRadius: 195
-            )
-            .shadow(color: .akugakiKoaImagesShadow, radius: 15)
-            .listRowSeparator(.hidden)
-            .listRowBackground(Color.clear)
-            .padding(.top, 8)
-            .padding(.bottom)
+        HStack {
+            Spacer()
+            Image(.koaMain1)
+                .genericStyle(
+                    gradientColors: .init(colors: [.black, .black, .black, .black, .black, .clear]),
+                    gradientStartRadius: 0,
+                    gradientEndRadius: imageWidth / 2
+                )
+                .frame(width: imageWidth, alignment: .center)
+                .shadow(color: .akugakiKoaImagesShadow, radius: 15)
+                .padding(.top, 8)
+                .padding(.bottom)
+            Spacer()
+        }
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
     }
 
     @ViewBuilder

@@ -61,7 +61,7 @@ enum Styles {
                 )
                 .onAppear {
                     withAnimation(
-                        .linear(duration: Double.random(in: 4 ... 5.5))
+                        .linear(duration: Double.random(in: 1.75 ... 3))
                     ) {
                         startPoint = UnitPoint(x: 1, y: 0)
                         endPoint = UnitPoint(x: 2, y: 0)
